@@ -1,6 +1,8 @@
-# [[course title]]
+# Analysis of single cell RNAseq (scRNAseq) data
 
 ## Description
+
+**NOTE: this material is currently under development**
 
 Description: This [[# classes/weeks]] course is designed to introduce attendees to [[main objectives]]
 Each [[length of session]] class meeting will include brief tutorials interspersed with challenge exercises, and assumes [[prerequisites]]. At the end of this course, you will be able to [[main deliverables]].
@@ -12,6 +14,8 @@ Software requirements for this course can be found on [fredhutch.io's Software p
 
 ## Schedule
 
+* [cellranger.md](cellranger.md) fastq file processing and mapping
+
 * Week 1: [[title]]
 * Week 2: [[title]]
 * Week 3: [[title]]
@@ -20,7 +24,7 @@ Software requirements for this course can be found on [fredhutch.io's Software p
 
 ## Resources
 
-* Each week's materials are described in the script prefaced with the number of the week.
+* Each week's materials are described in the relevant markdown (`*.md`) file.
 * [`exercises/`](exercises/) includes a file for each week representing both the aggregated in-class exercises as well as additional
 supplemental exercises for practice
 * [`solutions/`](solutions/) includes the solutions for all files in `exercises/`

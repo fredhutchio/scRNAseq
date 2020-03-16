@@ -2,79 +2,14 @@
 
 FIXME: intro
 
-## Logging on to rhino
-
-FIXME: overview rhino
-
-### On Fred Hutch's campus
-
-Check to make sure you're connected to the Marconi wireless network. Open the program you'll be using to access Unix on your computer (Terminal on Mac or WSL/Git bash on Windows) and type the following (where `username` is your HutchNetID):
-
-    ssh username@rhino
-
-Hit enter to execute the command. The first time you execute this on a computer, you'll receive a response similar to:
-
-> The authenticity of host 'rhino.fhcrc.org' can't be established.
-> Are you sure you want to continue connecting (yes/no)?
-
-Type `y` and press enter.
-
-You'll be prompted to enter your username and then password (note that your cursor will not move as you type your password; this is normal!).
-
-After you have successfully logged in, you'll see the information about the cluster printed to your screen. You'll be ready to start entering commands when you see a prompt like the following appear:
-
-> username@rhino2:~$
-
-
-### Off campus log-in
-
-For more information about remote login, please see [this entry](https://sciwiki.fredhutch.org/scicomputing/access_methods/#access-via-a-remote-location) in the Fred Hutch Biomedical Data Science Wiki.
-
-The short version: logging in off campus requires an additional step to connect to the campus network (where username is your HutchNetID):
-
-    ssh username@snail.fhcrc.org
-
-You'll see a message printed to the screen that starts with:
-
->  Welcome to the Fred Hutchinson Cancer Research Center
-
-Then you can enter:
-
-    ssh rhino
-
-You'll then be able to interact with the cluster as if you were on campus.
-
-
-## Loading software
-
-Your compute environment is the collection of machinery, software, and networks on which you perform tasks. Managing environments is challenging, but there are tools available to help you stay on the right track.
-
-Rhino has hundreds of pieces of software installed, so it uses a module system to make software available for use. To see what software you currently have loaded:
-
-    module list
-
-If you're looking for a specific package, you can search using terms related to the name of the software:
-
-    module spider cellranger
-
-If you see the package you want, you can load it with:
-
-    module load cellranger
-
-...or the abbreviated version, which is the same as above:
-
-    ml cellranger
-
-Be careful with multiple versions of the same software! You can load specific versions too (where XXX is the version number):
-
-    ml cellranger/XXX
-
-FIXME: Link to software available on rhino
-
-FIXME: loading modules every time you log on
-
-
 ## Getting set up
+
+Here is the short version of instructions found in the [remote computing](remote_compute.md) instructions.
+
+- Log on to snail (if necessary while off campus): `ssh username@snail.fhcrc.org`
+- Log on to rhino: `ssh username@rhino`
+- Grab a node: `grabnode`
+- Load software: `ml cellranger`
 
 This material is modified from an original tutorial from 10 Genomics available
 [here](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/tutorial_ov).

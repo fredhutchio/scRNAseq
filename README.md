@@ -14,12 +14,8 @@ Software requirements for this course can be found on [fredhutch.io's Software p
 
 ## Schedule
 
+* [remote_compute.md](remote_compute.md) accessing remote computing at Fred Hutch
 * [cellranger.md](cellranger.md) fastq file processing and mapping
-
-* Week 1: [[title]]
-* Week 2: [[title]]
-* Week 3: [[title]]
-* Week 4: [[title]]
 
 
 ## Resources

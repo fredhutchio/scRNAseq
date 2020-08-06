@@ -1,0 +1,76 @@
+---
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Analyzing Single-Cell RNA Sequencing Data in R 
+
+# Class 2: Preprocessing Cell Dataset Objects and Generating UMAP Plots
+
+## Objectives
+In the last class we learned how to generate a cell dataset (CDS) object and examined the structure of a CDS and how it can be modified (i.e. adding columns). Today, we will be learning how to filter and do an initial analysis on sc-RNA-seq data contained in a CDS.
+
+By the end of this lesson, you should be able to:
+
+* determine appropriate filters for data contained in a CDS object (i.e. UMI and mitochondrial read cutoffs)
+* reduce the dimensions of a filtered CDS object using principle component analysis
+* generate cell clusters from data stored in a CDS object
+* create a UMAP plot to visualize your cell clusters
+
+## Loading Required Packages
+
+```r
+# Load the monocle 3 package from last time so we have the set of tools 
+# designed for working with data stored in  a CDS object
+library(monocle3)
+
+# Load the ggplot2 functions that we will use to generate today's plots
+library(ggplot2)
+
+# Load the Matrix package from last time so that we have the tools to more 
+# efficiently access the CDS object elements
+library(Matrix)
+```
+
+## Filtering a CDS Object
+
+### Determining a Good UMI Cutoff
+
+We can distinguish between "real cells" and detection/sequencing errors based on the amount of RNAs (UMIs) detected in each cell. In order to assess a good cutoff for the UMIs in our sample, we can generate a plot showing the distribution of the UMIs in our sample.
+
+First, let's take a look at our CDS object and what it includes.
+
+```
+# Take a peak at what columns are currently included in the CDS
+
+cds
+```
+
+The first step is to first determine the number of UMIs found in each cell by totaling the counts of RNA species detected for each gene in the cell and adding this data as a new column (we will call it "n.umis").
+
+```
+# Add a column called "n.umis" to the cds that includes the total RNA count for each individual cell.
+## Instructor note: might need to introduce Matrix package? 
+
+colData(cds)$n.umis <- Matrix::colSums(counts(cds))
+```
+
+We can then view the distrubtion of our UMIs by generating a plot showing how many cells contain a specific amount of UMIs (i.e. a density plot).
+```
+# Plot the distribution of UMIs 
+##Instructor note: might need to introduce quick plot? also, need to add in plot example images once this is run on data
+
+qplot(colData(cds)$n.umis, geom="density")
+```
+
+The distribution of UMIs is not always very interpretable with a plot of the direct counts. However, log transforming the count data can often clear up the trend and make it easier to determine where to set a cutoff.
+
+```
+# Plot the log10 distribution of UMIs
+
+qplot(log10(colData(cds)$n.umis), geom="density")
+```
+
+

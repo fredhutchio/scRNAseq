@@ -21,17 +21,52 @@ By the end of this lesson, you should be able to:
 
 ## Loading Required Packages
 
-```r
-# Load the monocle 3 package from last time so we have the set of tools 
-# designed for working with data stored in  a CDS object
+Load the packages that will be required for today's class as follows.
+
+```{r, message=FALSE}
+# Load the monocle 3 package from last time so we have the set
+# of tools designed for working with data stored in a CDS
+# object
 library(monocle3)
 
-# Load the ggplot2 functions that we will use to generate today's plots
+# Load the ggplot2 functions that we will use to generate 
+# today's plots
 library(ggplot2)
 
-# Load the Matrix package from last time so that we have the tools to more 
-# efficiently access the CDS object elements
+# Load the Matrix package from last time so that we have the 
+# tools to more efficiently access the CDS object elements
 library(Matrix)
+```
+
+## Load the Data
+
+Go to https://figshare.com/articles/dataset/Single-cell_RNA-seq_data_from_microfluidic_emulsion_v2_/5968960 and download the attached files by clicking the "Download All" button. This should result in the download of a zip file called "5968960.zip". 
+
+Navigate to the zip file and unzip it (can usually be done by double clicking on the .zip file). 
+
+Open the new folder and unzip the "droplet.zip" file. Make sure to note where this folder is stored on your computer.
+
+The "genes.tsv" file in each of the datasets does not contain a column called "gene_short_name". However, we can still create a cell_data_set object and rename the column that includes the gene short names after creation.  
+
+```{r, include=TRUE, message=FALSE}
+# Create a cell_data_set from the Lung-10X_P7_8 dataset
+
+cds <- load_mm_data(mat_path = "~/Downloads/5968960/droplet/Lung-10X_P7_8/matrix.mtx", feature_anno_path = "~/Downloads/5968960/droplet/Lung-10X_P7_8/genes.tsv", cell_anno_path = "~/Downloads/5968960/droplet/Lung-10X_P7_8/barcodes.tsv")
+
+# Now, take a look at the cds
+
+cds
+
+# Note that the "rowData names" includes a indication of
+# something called "V2". We need to rename this to 
+# gene_short_names since the rownames are all gene short 
+# names.
+
+names(rowData(cds))[names(rowData(cds))=="V2"] <- "gene_short_name"
+
+#Now lets check that "V2" was changed to "gene_short_name"
+
+cds
 ```
 
 ## Filtering a CDS Object
@@ -40,37 +75,30 @@ library(Matrix)
 
 We can distinguish between "real cells" and detection/sequencing errors based on the amount of RNAs (UMIs) detected in each cell. In order to assess a good cutoff for the UMIs in our sample, we can generate a plot showing the distribution of the UMIs in our sample.
 
-First, let's take a look at our CDS object and what it includes.
+Note that under colData names there's a listing called "n.umi". This will be a column that lists the number of unique RNA molecules (or UMIs) found in each individual cell. Let's look at a snapshot of the column data.
 
-```
-# Take a peak at what columns are currently included in the CDS
-
-cds
-```
-
-The first step is to first determine the number of UMIs found in each cell by totaling the counts of RNA species detected for each gene in the cell and adding this data as a new column (we will call it "n.umis").
-
-```
-# Add a column called "n.umis" to the cds that includes the total RNA count for each individual cell.
-## Instructor note: might need to introduce Matrix package? 
-
-colData(cds)$n.umis <- Matrix::colSums(counts(cds))
+```{r, include=TRUE, message=FALSE}
+# Look at a snapshot of the column data found in the cds
+colData(cds)
 ```
 
-We can then view the distrubtion of our UMIs by generating a plot showing how many cells contain a specific amount of UMIs (i.e. a density plot).
-```
+Now let's look at the distrubtion of our UMIs by generating a plot showing how many cells contain a specific amount of UMIs (i.e. a density plot).
+
+NOTE: the "load_mm_data" function from Monocle automatically sets a minimum cutoff for umis of 100. You can turn this off by using "umi_cutoff = 0" as an input to the function if needed.
+
+FIXME
+(might need to introduce quick plot? also, need to add in plot example images once this is run on data)
+
+```{r, include=TRUE, message=FALSE}
 # Plot the distribution of UMIs 
-##Instructor note: might need to introduce quick plot? also, need to add in plot example images once this is run on data
 
-qplot(colData(cds)$n.umis, geom="density")
+qplot(colData(cds)$n.umi, geom="density")
 ```
 
 The distribution of UMIs is not always very interpretable with a plot of the direct counts. However, log transforming the count data can often clear up the trend and make it easier to determine where to set a cutoff.
 
-```
+```{r, include=TRUE, message=FALSE}
 # Plot the log10 distribution of UMIs
 
-qplot(log10(colData(cds)$n.umis), geom="density")
+qplot(log10(colData(cds)$n.umi), geom="density")
 ```
-
-

@@ -39,7 +39,7 @@ There are four methods to create a CDS object in Monocle:
 3. 
 4. 
 
-[matrix_types.png] (http://www.btechsmartclass.com/data_structures/ds_images/Triplet_Representation_of_Sparse_Matrix.png)
+![matrix_types](http://www.btechsmartclass.com/data_structures/ds_images/Triplet_Representation_of_Sparse_Matrix.png)
 
 1) starting with a regular matrix, 2) starting with a sparse matrix, 3) with cell ranger output directory and 4) with load_mm_data
 

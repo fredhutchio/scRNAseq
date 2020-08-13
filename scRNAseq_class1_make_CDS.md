@@ -78,14 +78,18 @@ If we are starting with a matrix that is already sparse, we only need to rerun s
 cell_metadata = read.table("/Users/elizabarkan/Desktop/5968960/droplet/Lung-10X_P7_8/barcodes.tsv", sep = "\t", header = FALSE)
 gene_annotation = read.table("/Users/elizabarkan/Desktop/5968960/droplet/Lung-10X_P7_8/gene.tsv", sep = "\t", header = FALSE)
 sparse_matrix = readMM("/Users/elizabarkan/Desktop/5968960/droplet/Lung-10X_P7_8/matrix.mtx") # different from 1, .mtx file type is a sparseMatrix format
+
 # 1 - Gene names must have a column name "gene_short_name"
 gene_annotation = rename(gene_annotation, c("V1"="gene_short_name"))
+
 # 2 - expression matrix column names must match the row names of cell metadata
 colnames(sparse_matrix) <- seq(1, dim(cell_metadata)[1], by=1) # different from 1
 row.names(cell_metadata) = seq(1, dim(cell_metadata)[1], by=1)
+
 # 4 - for Monocle version 3, cell metadata and gene annotation need to be converted to a data frame
 pd <- data.frame(cell_metadata)
 fData <- data.frame(gene_short_name = gene_annotation$gene_short_name, row.names = row.names(sparse_matrix))
+
 # make CDS object
 cds_obj <- new_cell_data_set(sparse_matrix, cell_metadata = pd, gene_metadata = fData)
 ```
@@ -96,6 +100,7 @@ With 10x v2 data:
 - 10x_data/outs/filtered_gene_bc_matrices/<genome>/barcodes.tsv
 - 10x_data/outs/filtered_gene_bc_matrices/<genome>/gene.tsv
 - 10x_data/outs/filtered_gene_bc_matrices/<genome>/matrix.mtx
+  
 With 10x v3 data:
 - 10x_data/outs/filtered_feature_bc_matrices/barcodes.tsv.gz
 - 10x_data/outs/filtered_feature_bc_matrices/features.tsv.gz
@@ -117,10 +122,18 @@ cds_obj <- readRDS(<filepath>/<filename>.RDS)
 ## The CDS object
 Now that we have a CDS object, let's get familiar with it!
 
-We can see the object is of 
+We can see the object is made up of the following multidimensions components:
 - class: cell_data_set
-- dimensions are n rows (genes) and m columns (cells)
-- 
+- dimensions: n rows (genes) and m columns (cells)
+- metadata: version of CDS object
+- assays: the types of measurements made for the cells, in this case we just have UMI counts
+- rownames: gene names
+- rowData names: column names from gene input
+- colnames: cell ID names, in this case they are the actual unique cell barcodes
+- colData names: column names from cell metadata input, 
+- reducedDimNames: once you run dimension reductions (e.g. PCA, tSNE, UMAP), the values for those reduced dimensions will be stored here
+- spikeNames:  ?
+- altExpNames: ?
 ```{r}
 cds_obj
 ```

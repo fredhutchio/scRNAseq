@@ -154,7 +154,7 @@ FIXME
 # FIXME
 ```
 
-### Preprocessing the Data Prior to Clustering
+## Preprocessing the Data Prior to Clustering
 
 Given that single-cell RNA sequencing datasets are often very large, we need to first determine how many principle components can adequately explain most of the variance in our dataset. We can then use this knowledge to reduce our matrix of data to only the critical components which will significantly speed up downstream steps.
 
@@ -175,9 +175,11 @@ We can see from the above plot that 50 principle components seems adequate to ex
 cds_preprocess50 <- preprocess_cds(cds_goodumi, num_dim = 50)
 ```
 
-### Clustering Our Data
+## Clustering scRNAseq Data
 
 In order to cluster the cells, we first have to reduce the dimensionality of our data down to 2 dimensions (X,Y) in order to better graph it (either with a tSNE or UMAP plot).
+
+Both t-SNE and UMAP are ways of taking high dimensional data and visually representing them in 2D space. In general, UMAP is considered to be better because it preservers more spatial relationships. We will be using UMAP today.
 
 ```{r, include=TRUE, message=FALSE}
 # Reduce dimensions of our data to 2D
@@ -214,3 +216,10 @@ cds_clustered_res <- cluster_cells(cds_reddim, resolution=1e-5)
 # Plot clustered cells with defined resolution
 plot_cells(cds_clustered_res)
 ```
+
+## Wrapping Up
+
+Today we learned:
+* how to evaluate which cells are good enough for analysis
+* how to preprocess cells for analysis
+* how to identify clusters in UMAP space

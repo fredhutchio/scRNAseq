@@ -4,19 +4,8 @@
 Two weeks before session, distribute instructions on how to install Monocle version 3 (https://cole-trapnell-lab.github.io/monocle3/docs/installation/), common troubleshooting (https://cole-trapnell-lab.github.io/monocle3/docs/installation/#troubleshooting) and answers to common questions and issues (https://github.com/cole-trapnell-lab/monocle3/issues).
 
 One week before session, hold an office hour to answer any remaining questions regarding Monocle installation. Students are ready to proceed with the course once they can run library(monocle3) without any errors.
-_____________________________
 
-Eliza's Notes/Overview:
-- review big picture what single cell data looks like (with images)
-- install and load v2 data
-- import the elemnts of a CDS from a regular matrix, convert to sparse then make CDS ""
-  - review difference between sparse and dense matrix (use image)
-  - review the format for new Monocle 3 input
-  - make a table comparing old and new input for new_cell_data_set
-- also can load directly if already sparse with "load_mm_data"
-- can load directly from cell ranger output "load_cellranger_data"
-- try subsetting the cds
-______________________________
+__________________________________________________________________________
 
 Today we will be reviewing how to create the data structures that contain all of our single cell RNA-sequencing data. These structured are called cell data sets or CDSs. These CDS objects are multi-dimensional and are made up of 3 individual files:
   1. a matrix of counts of sequenced reads or unique molecular identifiers (UMIs) by genes (rows) and cell (columns)
@@ -80,15 +69,15 @@ fData <- data.frame(gene_short_name = gene_annotation$gene_short_name, row.names
 Now we can make the CDS object. Once we have a CDS object, we can 
 ```{r}
 cds_obj <- new_cell_data_set(data, cell_metadata = pd, gene_metadata = fData)
-cds_obj # look at the cds_object
+cds_obj # look at the cds_object and confirm we have correct number of rows and columns
 ```
 Now we just made a CDS object the hard waty but there are a few other ways to make a CDS object. You might be starting with a sparse matrix already
-## 2. sparse matrix of counts + cell IDs + gene IDs
+## 2. Starting with sparse matrix of counts + cell IDs + gene IDs
 If we are starting with a matrix that is already sparse, we only need to rerun steps 1, 2 and 4 (skip 3). We also will use the readMM function from the Matrix package to read a sparse matrix file into R.
 ```{r}
 cell_metadata = read.table("/Users/elizabarkan/Desktop/5968960/droplet/Lung-10X_P7_8/barcodes.tsv", sep = "\t", header = FALSE)
 gene_annotation = read.table("/Users/elizabarkan/Desktop/5968960/droplet/Lung-10X_P7_8/gene.tsv", sep = "\t", header = FALSE)
-sparse_matrix = readMM("/Users/elizabarkan/Desktop/5968960/droplet/Lung-10X_P7_8/matrix.mtx") # different from 1
+sparse_matrix = readMM("/Users/elizabarkan/Desktop/5968960/droplet/Lung-10X_P7_8/matrix.mtx") # different from 1, .mtx file type is a sparseMatrix format
 # 1 - Gene names must have a column name "gene_short_name"
 gene_annotation = rename(gene_annotation, c("V1"="gene_short_name"))
 # 2 - expression matrix column names must match the row names of cell metadata
@@ -100,17 +89,17 @@ fData <- data.frame(gene_short_name = gene_annotation$gene_short_name, row.names
 # make CDS object
 cds_obj <- new_cell_data_set(sparse_matrix, cell_metadata = pd, gene_metadata = fData)
 ```
-## 3. 10X Genomics CellRanger output
+## 3. Starting with 10X Genomics CellRanger output
 A lot of researchers work with data from a CellRanger output from 10x so now we will introduce how to import data from a cell ranger output. There are two ways to do this, the first is to provide Monocle with the path to the 'outs' directory created by cell ranger. It is import that your directory structure match the directory and file names in order for this function to work.
 
 With 10x v2 data:
-  10x_data/outs/filtered_gene_bc_matrices/<genome>/barcodes.tsv
-  10x_data/outs/filtered_gene_bc_matrices/<genome>/gene.tsv
-  10x_data/outs/filtered_gene_bc_matrices/<genome>/matrix.mtx
+- 10x_data/outs/filtered_gene_bc_matrices/<genome>/barcodes.tsv
+- 10x_data/outs/filtered_gene_bc_matrices/<genome>/gene.tsv
+- 10x_data/outs/filtered_gene_bc_matrices/<genome>/matrix.mtx
 With 10x v3 data:
-  10x_data/outs/filtered_feature_bc_matrices/barcodes.tsv.gz
-  10x_data/outs/filtered_feature_bc_matrices/features.tsv.gz
-  10x_data/outs/filtered_feature_bc_matrices/matrix.mtx.gz
+- 10x_data/outs/filtered_feature_bc_matrices/barcodes.tsv.gz
+- 10x_data/outs/filtered_feature_bc_matrices/features.tsv.gz
+- 10x_data/outs/filtered_feature_bc_matrices/matrix.mtx.gz
   
 ```{r}
 # our data is v2 data
@@ -120,22 +109,31 @@ Alternatively, we can provide Monocle with the individual file paths for each of
 ```{r}
 cds_obj <- load_mm_data(mat_path = "<filepath>/5968960/droplet/Lung-10X_P7_8/matrix.mtx",feature_anno_path = "<filepath>/5968960/droplet/Lung-10X_P7_8/gene.tsv", cell_anno_path = "<filepath>/5968960/droplet/Lung-10X_P7_8/barcodes.tsv")
 ```
-
+## 4. Starting with CDS object
+Lastly, if someone has already saved a CDS object, you can import it directly into R. 
 ```{r}
-
+cds_obj <- readRDS(<filepath>/<filename>.RDS)
 ```
+## The CDS object
+Now that we have a CDS object, let's get familiar with it!
 
+We can see the object is of 
+- class: cell_data_set
+- dimensions are n rows (genes) and m columns (cells)
+- 
 ```{r}
-
+cds_obj
 ```
-
+## Subsetting and Merging CDS objects
+In the next couple classes we are going to show you how to use Monocle to clean up, visualize and run statistical tests on your data. You may find you need to subset your CDS object to process different types of data individually or you may want to combine CDS objects.
 ```{r}
+# subset CDS into a new CDS object
+cds2 <- cds[,1:100] # cds2 contains the first 100 cells
 
+# merge two CDS objects
+big_cds <- combine_cds(list(cds, cds2)) # combine them into one CDS
 ```
-
+If you want to learn more about a function in R you can put a question mark in front of to learn what arguments you can pass to it. For example with combine_cds, you can optionally specify 'cell_names_unique' to specify if Monocle should assume your Cell IDs are from the same cells (TRUE) or are from different cells (FALSE). 
 ```{r}
-
+?combine_cds
 ```
-
-
-

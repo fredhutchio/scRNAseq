@@ -97,9 +97,9 @@ cds_obj <- new_cell_data_set(sparse_matrix, cell_metadata = pd, gene_metadata = 
 A lot of researchers work with data from a CellRanger output from 10x so now we will introduce how to import data from a cell ranger output. There are two ways to do this, the first is to provide Monocle with the path to the 'outs' directory created by cell ranger. It is import that your directory structure match the directory and file names in order for this function to work.
 
 With 10x v2 data:
-- 10x_data/outs/filtered_gene_bc_matrices/<genome>/barcodes.tsv
-- 10x_data/outs/filtered_gene_bc_matrices/<genome>/gene.tsv
-- 10x_data/outs/filtered_gene_bc_matrices/<genome>/matrix.mtx
+- 10x_data/outs/filtered_gene_bc_matrices/ <genome> /barcodes.tsv
+- 10x_data/outs/filtered_gene_bc_matrices/ <genome> /gene.tsv
+- 10x_data/outs/filtered_gene_bc_matrices/ <genome> /matrix.mtx
   
 With 10x v3 data:
 - 10x_data/outs/filtered_feature_bc_matrices/barcodes.tsv.gz

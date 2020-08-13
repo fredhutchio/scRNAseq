@@ -150,3 +150,8 @@ If you want to learn more about a function in R you can put a question mark in f
 ```{r}
 ?combine_cds
 ```
+
+## Wrapping Up
+
+Today we learned:
+-

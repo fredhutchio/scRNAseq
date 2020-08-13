@@ -220,6 +220,7 @@ plot_cells(cds_clustered_res)
 ## Wrapping Up
 
 Today we learned:
+
 * how to evaluate which cells are good enough for analysis
 * how to preprocess cells for analysis
 * how to identify clusters in UMAP space

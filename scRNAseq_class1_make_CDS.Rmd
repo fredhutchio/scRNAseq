@@ -1,4 +1,12 @@
-Overview:
+
+## Making CDS objects for Single Cell Data Analysis
+
+Two weeks before, distribute instructions on how to install Monocle version 3 (https://cole-trapnell-lab.github.io/monocle3/docs/installation/), common troubleshooting (https://cole-trapnell-lab.github.io/monocle3/docs/installation/#troubleshooting) and answers to common questions and issues (https://github.com/cole-trapnell-lab/monocle3/issues).
+
+Hold a one hour office hour one week before to answer any remaining questions regarding Monocle installation.
+_____________________________
+
+Eliza's Notes/Overview:
 - review big picture what single cell data looks like (with images)
 - install and load v2 data
 - import the elemnts of a CDS from a regular matrix, convert to sparse then make CDS ""
@@ -7,6 +15,23 @@ Overview:
   - make a table comparing old and new input for new_cell_data_set
 - also can load directly if already sparse with "load_mm_data"
 - can load directly from cell ranger output "load_cellranger_data"
+______________________________
+
+Today we will be reviewing the objects that contain single cell RNA-sequencing data. These objects are multi-dimensional because for each cell you have gene expression data for each gene and then additionally for each cell you have other information about how it was processed and what sample it comes from. With Monocle, this object is called a CDS object.
+
+We can start by checking that Monocle has been installed correctly. If library(monocle3) runs without any errors, Monocle 3 has been successfully installed!
+
+```{r}
+library(monocle3)
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
 
 ```{r}
 

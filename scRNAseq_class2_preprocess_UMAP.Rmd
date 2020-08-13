@@ -1,5 +1,5 @@
 ---
-output: rmarkdown::github_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
@@ -8,6 +8,8 @@ knitr::opts_chunk$set(echo = TRUE)
 # Analyzing Single-Cell RNA Sequencing Data in R 
 
 # Class 2: Preprocessing Cell Dataset Objects and Generating UMAP Plots
+
+This class is based on materials provided by Monocle 3 and the Brotman Baty Institute.
 
 ## Objectives
 In the last class we learned how to generate a cell dataset (CDS) object and examined the structure of a CDS and how it can be modified (i.e. adding columns). Today, we will be learning how to filter and do an initial analysis on sc-RNA-seq data contained in a CDS.
@@ -36,6 +38,14 @@ library(ggplot2)
 # Load the Matrix package from last time so that we have the 
 # tools to more efficiently access the CDS object elements
 library(Matrix)
+
+# Load the dplyr package so that we can use some of its 
+# functions for later dataframe manipulation
+library(dplyr)
+
+# Load the readr package so that we can pull datasets directly
+# from github
+library(readr)
 ```
 
 ## Load the Data
@@ -48,13 +58,15 @@ Open the new folder and unzip the "droplet.zip" file. Make sure to note where th
 
 The "genes.tsv" file in each of the datasets does not contain a column called "gene_short_name". However, we can still create a cell_data_set object and rename the column that includes the gene short names after creation.  
 
+FIXME
+(needs to link to github documents)
+
 ```{r, include=TRUE, message=FALSE}
 # Create a cell_data_set from the Lung-10X_P7_8 dataset
 
 cds <- load_mm_data(mat_path = "~/Downloads/5968960/droplet/Lung-10X_P7_8/matrix.mtx", feature_anno_path = "~/Downloads/5968960/droplet/Lung-10X_P7_8/genes.tsv", cell_anno_path = "~/Downloads/5968960/droplet/Lung-10X_P7_8/barcodes.tsv")
 
 # Now, take a look at the cds
-
 cds
 
 # Note that the "rowData names" includes a indication of
@@ -101,4 +113,104 @@ The distribution of UMIs is not always very interpretable with a plot of the dir
 # Plot the log10 distribution of UMIs
 
 qplot(log10(colData(cds)$n.umi), geom="density")
+```
+
+From both of these plots, we can conservatively say that most cells have somewhere between 100 and 10,000 on the standard density plot or between 2 and 4 on the log10 scale.
+
+Note that the minimum detected number of UMIs seems to be well above our minimum cutoff, but this works for this data. You should never use less than 100 UMIs as a cutoff (<100 indicates a generally bad sample), but you can choose to increase it if necessary/desired.
+
+Now, let's apply the determined UMI cutoff.
+
+```{r, include=TRUE, message=FALSE}
+# Filter out cells with more than 100 and less than 10000 UMIs
+cds_goodumi <- cds[,pData(cds)$n.umi > 100 & pData(cds)$n.umi < 10000]
+
+# Check that cells have been removed
+cds_goodumi
+```
+
+Note that we have now filtered out 93 cells based on the UMI cutoffs.
+
+### Determining a Good Mitochondrial Gene Expression Cutoff
+
+FIXME
+
+(genes found in the mitochondrial dna don't seem to be included in this lung dataset, only mitochondrial activity associated genes)
+
+One of the ways that we can tell a cell was alive and of good quality going in is the number of mitochondrial genes it exhibits. To calculate this, we first need a list of mitochondrial genes found in our organism, then we need to calculate what percentage of the overall RNAs/UMIs in the cell correspond to mitochondrial genes.
+
+In the mouse genome, mitochondrial genes are  prefaced with "mt" which makes them easier to identify in our dataset.
+
+### Normalizing the Data Based on ERCC Spike-In Controls
+
+Published datasets often include a set of gene transcript identifiers at the end of the gene list that have names beginning with "ERCC." These are a set of spike-in controls that can be used to normalize cell RNA/UMI contents. This is done by calculating the amount of intrinsic RNAs/UMIs measured over the number of ERCC transcripts/UMIs measured. 
+
+This is not a requirement and its usefulness is somewhat debated in the context of single-cell transcriptomics (see [this paper]https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5549838/), but is often a useful tool. 
+
+FIXME 
+(contemplating simply not using this as it is not in most current monocle packages; rather size factor is utilized instead in a lot of the calculations, but it would be useful for people to be aware of this if they are trying to analyze other people's data)
+```{r, include=TRUE, message=FALSE}
+# Create a new cds with normalized transcript levels
+# FIXME
+```
+
+### Preprocessing the Data Prior to Clustering
+
+Given that single-cell RNA sequencing datasets are often very large, we need to first determine how many principle components can adequately explain most of the variance in our dataset. We can then use this knowledge to reduce our matrix of data to only the critical components which will significantly speed up downstream steps.
+
+```{r, include=TRUE, message=FALSE}
+# Let's start with 100 principle components
+cds_preprocess100 <- preprocess_cds(cds_goodumi, num_dim = 100)
+
+# Now, let's evaluate how much variance is explained by each
+# of these princple components
+plot_pc_variance_explained(cds_preprocess100)
+```
+
+We can see from the above plot that 50 principle components seems adequate to explain most of the variance.
+
+```{r, include=TRUE, message=FALSE}
+# Let's preprocess the cds taking into account 50 principle
+# compenents since those seem to explain most of the variance.
+cds_preprocess50 <- preprocess_cds(cds_goodumi, num_dim = 50)
+```
+
+### Clustering Our Data
+
+In order to cluster the cells, we first have to reduce the dimensionality of our data down to 2 dimensions (X,Y) in order to better graph it (either with a tSNE or UMAP plot).
+
+```{r, include=TRUE, message=FALSE}
+# Reduce dimensions of our data to 2D
+# Note: automatically assumes that PCA was used as 
+# preprocessing method; can change this using 
+# "preprocess_method=" to designate a different method
+cds_reddim <- reduce_dimension(cds_preprocess50)
+
+# Look at the spatial distribution of our cells on a UMAP plot
+# Note: cells will visually appear to be in clusters because 
+# they have similar RNA/UMI contents and therefore similar 
+# placement in UMAP space, but clusters are not recognized as # an entity by your computer yet
+plot_cells(cds_reddim)
+```
+
+Now, we want to tell our computer to recognize cells that are in similar locations in UMAP space as clusters as they are likely the same/similar cell types.
+
+```{r, include=TRUE, message=FALSE}
+# Cluster cells that are spatially related in UMAP space
+cds_clustered <- cluster_cells(cds_reddim)
+
+# Plot the cells newly recognized as clusters
+plot_cells(cds_clustered)
+```
+
+Sometimes clusters that are very close together won't be recognized as separate with the automatic parameters in each of these functions. If this happens you can run something like follows (note that our cluster identification is good, so we should see the same thing).
+
+```{r, include=TRUE, message=FALSE}
+# Cluster cells and change the resolution parameter
+# Resolution ranges from 0 to 1
+# Best to keep resolution between 0 and 1e-2 if possible
+cds_clustered_res <- cluster_cells(cds_reddim, resolution=1e-5)
+
+# Plot clustered cells with defined resolution
+plot_cells(cds_clustered_res)
 ```

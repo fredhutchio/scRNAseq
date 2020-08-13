@@ -2,6 +2,7 @@
 [Class_1.RMD] https://github.com/fredhutchio/scRNAseq/edit/monocle/scRNAseq_class1_make_CDS.Rmd
 ## Week 2: Preprocessing and Creating/Manipulating UMAP/tSNE Plots (Rachel)
 [Class 2 .RMD] https://github.com/fredhutchio/scRNAseq/blob/monocle/scRNAseq_class2_preprocess_UMAP.Rmd
+(add in pseudotime here? I'm currently going to be putting it in Week 4)
 ## Week 3: Garnett for Identification of Cells (Eliza)
 [Class_3.RMD] https://github.com/fredhutchio/scRNAseq/blob/monocle/scRNAseq_class3_Garnett.Rmd
 ## Week 4: Differential Expression Analysis and Gene Modules (Rachel)

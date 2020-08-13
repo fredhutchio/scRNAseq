@@ -40,11 +40,11 @@ There are multiple methods to create a CDS object in Monocle that we will cover 
 1. full matrix of counts + cell IDs + gene IDs
 2. sparse matrix of counts + cell IDs + gene IDs
 3. 10X Genomics CellRanger output
-  a. file path to the 'outs' file
-  b. individual CellRanger output components
+ a. file path to the 'outs' file
+ b. individual CellRanger output components
 4. CDS object
 
-First we will assume you are starting with the least processed form of single cell gene expression data, which is a matrix of counts- either reads of UMIs. To load the data into a CDS, you must convert the matrix into a sparse matrix. Instead of a matrix of values, a sparse matrix has three columns: row, column and value. The position of each non-zero value in the matrix is stored in this format. If you have a lot of data and a lot of that data is made of zeros, this is a much more efficient way to store it AND it is the format neccessary to make a CDS object for Monocle.
+First we will assume you are starting with the least processed form of single cell gene expression data, which is a matrix of counts- either reads or UMIs. To load the data into a CDS, you must convert the matrix into a sparse matrix. Instead of a matrix of values, a sparse matrix has three columns: row, column and value. The position of each non-zero value in the matrix is stored in this format. If you have a lot of data and a lot of that data is made of zeros, this is a much more efficient way to store it AND it is the format neccessary to make a CDS object for Monocle.
 
 ![matrix_types](http://www.btechsmartclass.com/data_structures/ds_images/Triplet_Representation_of_Sparse_Matrix.png)
 

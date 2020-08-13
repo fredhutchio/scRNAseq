@@ -1,0 +1,13 @@
+Overview:
+- review big picture what single cell data looks like (with images)
+- install and load v2 data
+- import the elemnts of a CDS from a regular matrix, convert to sparse then make CDS ""
+  - review difference between sparse and dense matrix (use image)
+  - review the format for new Monocle 3 input
+  - make a table comparing old and new input for new_cell_data_set
+- also can load directly if already sparse with "load_mm_data"
+- can load directly from cell ranger output "load_cellranger_data"
+
+```{r}
+
+```

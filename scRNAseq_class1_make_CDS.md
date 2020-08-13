@@ -27,24 +27,31 @@ We can start by checking that Monocle has been installed correctly. If library(m
 ```{r}
 library(monocle3)
 ```
-Next, we want to download the data we will be working with today. This is single cell data from mouse that has been processed with 10x Genomics (v2) single cell platform.
+
+Monocle is a toolkit in R to analyze single-cell gene expression experiments. 
+
+To get started, we want to download the data we will be working with today. This is single cell data from mouse that has been processed with 10x Genomics (v2) single cell platform.
 
 1. Download the data as a zip from Github (https://github.com/fredhutchio/scRNAseq/tree/monocle/lung_data/Lung-10X_P7_8)
 2. Unzip the data 
 3. Move the data to a new folder titled "scRNAseq_class"
 
-There are four methods to create a CDS object in Monocle:
-1. load a full matrix of counts, list of 
-2. load a sparse matrix of counts
-3. 
-4. 
+There are multiple methods to create a CDS object in Monocle that we will cover today- if you are starting with:
+1. full matrix of counts + cell IDs + gene IDs
+2. sparse matrix of counts + cell IDs + gene IDs
+3. 10X Genomics CellRanger output
+  a. file path to the 'outs' file
+  b. individual CellRanger output components
+4. CDS object
+
+First we will assume you are starting with the least processed form of single cell gene expression data, which is a matrix of counts- either reads of UMIs. To load the data into a CDS, you must convert the matrix into a sparse matrix. Instead of a matrix of values, a sparse matrix has three columns: row, column and value. The position of each non-zero value in the matrix is stored in this format. If you have a lot of data and a lot of that data is made of zeros, this is a much more efficient way to store it AND it is the format neccessary to make a CDS object for Monocle.
 
 ![matrix_types](http://www.btechsmartclass.com/data_structures/ds_images/Triplet_Representation_of_Sparse_Matrix.png)
 
-1) starting with a regular matrix, 2) starting with a sparse matrix, 3) with cell ranger output directory and 4) with load_mm_data
-
 ```{r}
 
+data <- as(as.matrix(expression_matrix), 'sparseMatrix')
+head(data)
 ```
 
 ```{r}

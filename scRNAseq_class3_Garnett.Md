@@ -1,14 +1,4 @@
-Eliza's notes to self
-Overview:
-- explain big picture what classifiers do and what garnett does
-- install garnett
-- generate our own classifier with our own marker file
-  - check markers
-  - idea: use some markers that are bad as an example, then find a better one after checking the markers
-  - classify cells 
-- classifiy the same cells with a pre-trained classifier
-- visualize cells colored by  
-________________________________________________________________
+## Classifying cells with Garnett
 
 So far we have:
 - imported a CDS object

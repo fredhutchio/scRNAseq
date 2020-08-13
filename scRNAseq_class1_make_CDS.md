@@ -75,9 +75,9 @@ Now we just made a CDS object the hard waty but there are a few other ways to ma
 ## 2. Starting with sparse matrix of counts + cell IDs + gene IDs
 If we are starting with a matrix that is already sparse, we only need to rerun steps 1, 2 and 4 (skip 3). We also will use the readMM function from the Matrix package to read a sparse matrix file into R.
 ```{r}
-cell_metadata = read.table("/Users/elizabarkan/Desktop/5968960/droplet/Lung-10X_P7_8/barcodes.tsv", sep = "\t", header = FALSE)
-gene_annotation = read.table("/Users/elizabarkan/Desktop/5968960/droplet/Lung-10X_P7_8/gene.tsv", sep = "\t", header = FALSE)
-sparse_matrix = readMM("/Users/elizabarkan/Desktop/5968960/droplet/Lung-10X_P7_8/matrix.mtx") # different from 1, .mtx file type is a sparseMatrix format
+cell_metadata = read.table("<filepath>/5968960/droplet/Lung-10X_P7_8/barcodes.tsv", sep = "\t", header = FALSE)
+gene_annotation = read.table("<filepath>/5968960/droplet/Lung-10X_P7_8/gene.tsv", sep = "\t", header = FALSE)
+sparse_matrix = readMM("<filepath>/5968960/droplet/Lung-10X_P7_8/matrix.mtx") # different from 1, .mtx file type is a sparseMatrix format
 
 # 1 - Gene names must have a column name "gene_short_name"
 gene_annotation = rename(gene_annotation, c("V1"="gene_short_name"))

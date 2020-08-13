@@ -42,10 +42,6 @@ library(Matrix)
 # Load the dplyr package so that we can use some of its 
 # functions for later dataframe manipulation
 library(dplyr)
-
-# Load the readr package so that we can pull datasets directly
-# from github
-library(readr)
 ```
 
 ## Load the Data

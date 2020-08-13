@@ -142,3 +142,8 @@ Next, let's visualize cells colored by cell type
 ```{r}
 plot_cells(cds, color_cells_by = "cell_type") + theme_bw()
 ```
+
+## Wrapping Up
+
+Today we learned:
+-

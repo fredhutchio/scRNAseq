@@ -1,0 +1,46 @@
+---
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Analyzing Single-Cell RNA Sequencing Data in R 
+
+# Class 4: Pseuodtime and Differential Expression Analysis
+
+## Objectives
+
+In the last class we learned how to generate a classifier and use it to classify cells with Garnett. Today, we will learn how to determine the pseudotime associated with all of the clusters and how to look at the differential expression of genes between clusters. 
+
+By the end of this lesson, you should be able to:
+
+* determine the order of clusters in pseudotime
+* identify genes differentially expressed in clusters of interest
+* generate gene modules associated with clusters of interest
+
+## Load Required Packages
+
+Load the packages that will be required for today's class as follows.
+
+```{r, message=FALSE}
+# Load the monocle 3 package from last time so we have the set
+# of tools designed for working with data stored in a CDS
+# object
+library(monocle3)
+
+# Load the ggplot2 functions that we will use to generate 
+# today's plots
+library(ggplot2)
+```
+
+## Pseudotime Analysis
+
+## Differential Gene Expression
+
+### Identification of Top Differentially Expressed Genes
+
+### Generating Gene Modules
+
+## Wrapping Up

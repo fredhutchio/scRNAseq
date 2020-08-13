@@ -10,6 +10,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Class 4: Pseuodtime and Differential Expression Analysis
 
+This class is based off of code provided by Monocle 3 and the Brotman Baty Institute.
+
 ## Objectives
 
 In the last class we learned how to generate a classifier and use it to classify cells with Garnett. Today, we will learn how to determine the pseudotime associated with all of the clusters and how to look at the differential expression of genes between clusters. 
@@ -33,6 +35,30 @@ library(monocle3)
 # Load the ggplot2 functions that we will use to generate 
 # today's plots
 library(ggplot2)
+```
+
+## Reload CDS from Previous Lessons
+
+We need to reload the cds from last time, which can be done as follows.
+
+```{r, include=TRUE, message=FALSE}
+# Load matrix file into cds
+cds <- load_mm_data(mat_path = "~/Downloads/5968960/droplet/Lung-10X_P7_8/matrix.mtx", feature_anno_path = "~/Downloads/5968960/droplet/Lung-10X_P7_8/genes.tsv", cell_anno_path = "~/Downloads/5968960/droplet/Lung-10X_P7_8/barcodes.tsv")
+
+# Rename V2 row to gene_short_name 
+names(rowData(cds))[names(rowData(cds))=="V2"] <- "gene_short_name"
+
+# Filter out cells based on umi levels
+cds_goodumi <- cds[,pData(cds)$n.umi > 100 & pData(cds)$n.umi < 10000]
+
+# Preprocess using 50 PCs
+cds_preprocess50 <- preprocess_cds(cds_goodumi, num_dim = 50)
+
+# Reduce dimensions to 2D of the preprocessed cds
+cds_reddim <- reduce_dimension(cds_preprocess50)
+
+# CLuster cells
+cds_clustered <- cluster_cells(cds_reddim)
 ```
 
 ## Pseudotime Analysis

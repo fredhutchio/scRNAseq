@@ -67,11 +67,14 @@ FIXME (needs to link to github documents)
 ``` r
 # Create a cell_data_set from the Lung-10X_P7_8 dataset
 
-cds <- load_mm_data(mat_path = "~/Downloads/5968960/droplet/Lung-10X_P7_8/matrix.mtx", feature_anno_path = "~/Downloads/5968960/droplet/Lung-10X_P7_8/genes.tsv", cell_anno_path = "~/Downloads/5968960/droplet/Lung-10X_P7_8/barcodes.tsv")
+cds <- load_mm_data(mat_path = "~/Downloads/5968960/droplet/Lung-10X_P7_8/matrix.mtx", 
+      feature_anno_path = "~/Downloads/5968960/droplet/Lung-10X_P7_8/genes.tsv", 
+      cell_anno_path = "~/Downloads/5968960/droplet/Lung-10X_P7_8/barcodes.tsv")
 ```
 
 ``` r
 # Now, take a look at the cds
+
 cds
 ```
 ![cds_view1](https://github.com/fredhutchio/scRNAseq/blob/monocle/class2_figures/cds_view1.png)
@@ -83,7 +86,8 @@ cds
 # names.
 
 names(rowData(cds))[names(rowData(cds))=="V2"] <- "gene_short_name"
-
+```
+``` r
 #Now lets check that "V2" was changed to "gene_short_name"
 
 cds
@@ -106,6 +110,7 @@ data.
 
 ``` r
 # Look at a snapshot of the column data found in the cds
+
 colData(cds)
 ```
 ![coldata](https://github.com/fredhutchio/scRNAseq/blob/monocle/class2_figures/colData_view.png)
@@ -155,10 +160,12 @@ Now, let’s apply the determined UMI cutoff.
 
 ``` r
 # Filter out cells with more than 100 and less than 10000 UMIs
+
 cds_goodumi <- cds[,pData(cds)$n.umi > 100 & pData(cds)$n.umi < 10000]
 ```
 ``` r
 # Check that cells have been removed
+
 cds_goodumi
 ```
 ![cds_goodumi](https://github.com/fredhutchio/scRNAseq/blob/monocle/class2_figures/cds_umigood.png)
@@ -201,6 +208,7 @@ they are trying to analyze other people’s data)
 
 ``` r
 # Create a new cds with normalized transcript levels
+
 # FIXME
 ```
 
@@ -214,11 +222,13 @@ which will significantly speed up downstream steps.
 
 ``` r
 # Let's start with 100 principle components
+
 cds_preprocess100 <- preprocess_cds(cds_goodumi, num_dim = 100)
 ```
 ``` r
 # Now, let's evaluate how much variance is explained by each
 # of these princple components
+
 plot_pc_variance_explained(cds_preprocess100)
 ```
 ![plot_pc_variance](https://github.com/fredhutchio/scRNAseq/blob/monocle/class2_figures/plot_pc_variance.png)
@@ -236,12 +246,15 @@ Both t-SNE and UMAP are ways of taking high dimensional data and visually repres
 # Note: automatically assumes that PCA was used as 
 # preprocessing method; can change this using 
 # "preprocess_method=" to designate a different method
-cds_reddim <- reduce_dimension(cds_preprocess50)
 
+cds_reddim <- reduce_dimension(cds_preprocess50)
+```
+``` r
 # Look at the spatial distribution of our cells on a UMAP plot
 # Note: cells will visually appear to be in clusters because 
 # they have similar RNA/UMI contents and therefore similar 
 # placement in UMAP space, but clusters are not recognized as # an entity by your computer yet
+
 plot_cells(cds_reddim)
 ```
 ![umap_plot1](https://github.com/fredhutchio/scRNAseq/blob/monocle/class2_figures/umap_nocluster.png)
@@ -250,9 +263,12 @@ Now, we want to tell our computer to recognize cells that are in similar locatio
 
 ``` r
 # Cluster cells that are spatially related in UMAP space
-cds_clustered <- cluster_cells(cds_reddim)
 
+cds_clustered <- cluster_cells(cds_reddim)
+```
+``` r
 # Plot the cells newly recognized as clusters
+
 plot_cells(cds_clustered)
 ```
 ![umap_clustered](https://github.com/fredhutchio/scRNAseq/blob/monocle/class2_figures/umap_cluster_noresindication.png)
@@ -266,9 +282,12 @@ identification is good, so we should see the same thing).
 # Cluster cells and change the resolution parameter
 # Resolution ranges from 0 to 1
 # Best to keep resolution between 0 and 1e-2 if possible
-cds_clustered_res <- cluster_cells(cds_reddim, resolution=1e-5)
 
+cds_clustered_res <- cluster_cells(cds_reddim, resolution=1e-5)
+```
+``` r
 # Plot clustered cells with defined resolution
+
 plot_cells(cds_clustered_res)
 ```
 ![umap_cluster_withres](https://github.com/fredhutchio/scRNAseq/blob/monocle/class2_figures/umap_cluster_res.png)

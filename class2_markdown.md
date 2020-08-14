@@ -72,23 +72,25 @@ cds <- load_mm_data(mat_path = "~/Downloads/5968960/droplet/Lung-10X_P7_8/matrix
       cell_anno_path = "~/Downloads/5968960/droplet/Lung-10X_P7_8/barcodes.tsv")
 ```
 
+Now, let's take a look at what's in the cds object.
+
 ``` r
-# Now, take a look at the cds
+# Take a peek at the cds
 
 cds
 ```
 ![cds_view1](https://github.com/fredhutchio/scRNAseq/blob/monocle/class2_figures/cds_view1.png)
 
+Note that the "rowData names" indicates that there is a row called "V2." Note that all of the actual "rownames" are gene short names. Therefore, we want to rename "V2" as "gene_short_names" so that downstream Monocle 3 functions will work properly.
+
 ``` r
-# Note that the "rowData names" includes a indication of
-# something called "V2". We need to rename this to 
-# gene_short_names since the rownames are all gene short 
-# names.
+# Rename "V2" row as "gene_short_name"
 
 names(rowData(cds))[names(rowData(cds))=="V2"] <- "gene_short_name"
 ```
+Now, let's check that the rowData name "V2" was changed to "gene_short_name"
 ``` r
-#Now lets check that "V2" was changed to "gene_short_name"
+# Take another peek at the cds
 
 cds
 ```
@@ -220,14 +222,17 @@ explain most of the variance in our dataset. We can then use this
 knowledge to reduce our matrix of data to only the critical components
 which will significantly speed up downstream steps.
 
+Let's start with calculating the first 100 principle components.
+
 ``` r
-# Let's start with 100 principle components
+# Preprocess cds with first 100 principle components 
 
 cds_preprocess100 <- preprocess_cds(cds_goodumi, num_dim = 100)
 ```
+Now, let's evaluate how much variance is explained by each of these princple components.
+
 ``` r
-# Now, let's evaluate how much variance is explained by each
-# of these princple components
+# Look at the amount of variance explained by each parinciple component
 
 plot_pc_variance_explained(cds_preprocess100)
 ```
@@ -241,25 +246,24 @@ graph it (either with a tSNE or UMAP plot).
 
 Both t-SNE and UMAP are ways of taking high dimensional data and visually representing them in 2D space. In general, UMAP is considered to be better because it preservers more spatial relationships. We will be using UMAP today.
 
+Note that the reduce_dimension function automatically assumes principle component anlaysis (PCA) is the desired dimension reduction technique. There are others and you can set a different one by designating "preprocess_method" internally to the "reduce_dimension" function (i.e. cds_reddim <- reduce_dimension(cds_preprocess, preprocess_method="PCA") .
+
 ``` r
 # Reduce dimensions of our data to 2D
-# Note: automatically assumes that PCA was used as 
-# preprocessing method; can change this using 
-# "preprocess_method=" to designate a different method
 
 cds_reddim <- reduce_dimension(cds_preprocess50)
 ```
+
+Now, let's look at the spatial distribution of our cells that have been reduced in dimensions based on the first 50 principle components. We will use UMAP for visualization (alternatives to UMAP include t-SNE). 
+
 ``` r
 # Look at the spatial distribution of our cells on a UMAP plot
-# Note: cells will visually appear to be in clusters because 
-# they have similar RNA/UMI contents and therefore similar 
-# placement in UMAP space, but clusters are not recognized as # an entity by your computer yet
 
 plot_cells(cds_reddim)
 ```
 ![umap_plot1](https://github.com/fredhutchio/scRNAseq/blob/monocle/class2_figures/umap_nocluster.png)
 
-Now, we want to tell our computer to recognize cells that are in similar locations in UMAP space as clusters as they are likely the same/similar cell types.
+Note that cells will visually appear to be in clusters because they have similar RNA/UMI contents and therefore similar placement in UMAP space. However, clusters are not recognized as an entity by your computer yet even if they are visible by eye. Now, we want to tell our computer to recognize cells that are in similar locations in UMAP space as clusters as they are likely the same/similar cell types.
 
 ``` r
 # Cluster cells that are spatially related in UMAP space

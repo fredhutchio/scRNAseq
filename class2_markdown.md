@@ -150,7 +150,7 @@ qplot(log10(colData(cds)$n.umi), geom="density")
 ![umi_log](https://github.com/fredhutchio/scRNAseq/blob/monocle/class2_figures/UMI_log.png)
 
 From both of these plots, we can conservatively say that most cells have
-somewhere between 100 and 10,000 on the standard density plot or between
+somewhere between 100 and 10,000 UMIs on the standard density plot or between
 2 and 4 on the log10 scale.
 
 Note that the minimum detected number of UMIs seems to be well above our

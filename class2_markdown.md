@@ -127,4 +127,156 @@ example images once this is run on data)
 qplot(colData(cds)$n.umi, geom="density")
 ```
 
-![umi_plot1](https://github.com/fredhutchio/scRNAseq/blob/monocle/class2_figures/UMI_standard.png | width = 200)
+![umi_plot1](https://github.com/fredhutchio/scRNAseq/blob/monocle/class2_figures/UMI_standard.png)
+
+The distribution of UMIs is not always very interpretable with a plot of
+the direct counts. However, log transforming the count data can often
+clear up the trend and make it easier to determine where to set a
+cutoff.
+
+``` r
+# Plot the log10 distribution of UMIs
+
+qplot(log10(colData(cds)$n.umi), geom="density")
+```
+
+![umi_log](https://github.com/fredhutchio/scRNAseq/blob/monocle/class2_figures/UMI_log.png)
+
+From both of these plots, we can conservatively say that most cells have
+somewhere between 100 and 10,000 on the standard density plot or between
+2 and 4 on the log10 scale.
+
+Note that the minimum detected number of UMIs seems to be well above our
+minimum cutoff, but this works for this data. You should never use less
+than 100 UMIs as a cutoff (<100 indicates a generally bad sample), but
+you can choose to increase it if necessary/desired.
+
+Now, let’s apply the determined UMI cutoff.
+
+``` r
+# Filter out cells with more than 100 and less than 10000 UMIs
+cds_goodumi <- cds[,pData(cds)$n.umi > 100 & pData(cds)$n.umi < 10000]
+```
+``` r
+# Check that cells have been removed
+cds_goodumi
+```
+![cds_goodumi](https://github.com/fredhutchio/scRNAseq/blob/monocle/class2_figures/cds_umigood.png)
+
+Note that we have now filtered out 93 cells based on the UMI cutoffs.
+
+### Determining a Good Mitochondrial Gene Expression Cutoff
+
+FIXME
+
+(genes found in the mitochondrial dna don’t seem to be included in this
+lung dataset, only mitochondrial activity associated genes)
+
+One of the ways that we can tell a cell was alive and of good quality
+going in is the number of mitochondrial genes it exhibits. To calculate
+this, we first need a list of mitochondrial genes found in our organism,
+then we need to calculate what percentage of the overall RNAs/UMIs in
+the cell correspond to mitochondrial genes.
+
+In the mouse genome, mitochondrial genes are prefaced with “mt” which
+makes them easier to identify in our dataset.
+
+### Normalizing the Data Based on ERCC Spike-In Controls
+
+Published datasets often include a set of gene transcript identifiers at
+the end of the gene list that have names beginning with “ERCC.” These
+are a set of spike-in controls that can be used to normalize cell
+RNA/UMI contents. This is done by calculating the amount of intrinsic
+RNAs/UMIs measured over the number of ERCC transcripts/UMIs measured.
+
+This is not a requirement and its usefulness is somewhat debated in the
+context of single-cell transcriptomics (see [this
+paper]<https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5549838/>), but is
+often a useful tool.
+
+FIXME (contemplating simply not using this as it is not in most current
+monocle packages; rather size factor is utilized instead in a lot of the
+calculations, but it would be useful for people to be aware of this if
+they are trying to analyze other people’s data)
+
+``` r
+# Create a new cds with normalized transcript levels
+# FIXME
+```
+
+## Preprocessing the Data Prior to Clustering
+
+Given that single-cell RNA sequencing datasets are often very large, we
+need to first determine how many principle components can adequately
+explain most of the variance in our dataset. We can then use this
+knowledge to reduce our matrix of data to only the critical components
+which will significantly speed up downstream steps.
+
+``` r
+# Let's start with 100 principle components
+cds_preprocess100 <- preprocess_cds(cds_goodumi, num_dim = 100)
+```
+``` r
+# Now, let's evaluate how much variance is explained by each
+# of these princple components
+plot_pc_variance_explained(cds_preprocess100)
+```
+![plot_pc_variance](https://github.com/fredhutchio/scRNAseq/blob/monocle/class2_figures/plot_pc_variance.png)
+
+## Clustering scRNAseq Data
+
+In order to cluster the cells, we first have to reduce the
+dimensionality of our data down to 2 dimensions (X,Y) in order to better
+graph it (either with a tSNE or UMAP plot).
+
+Both t-SNE and UMAP are ways of taking high dimensional data and visually representing them in 2D space. In general, UMAP is considered to be better because it preservers more spatial relationships. We will be using UMAP today.
+
+``` r
+# Reduce dimensions of our data to 2D
+# Note: automatically assumes that PCA was used as 
+# preprocessing method; can change this using 
+# "preprocess_method=" to designate a different method
+cds_reddim <- reduce_dimension(cds_preprocess50)
+
+# Look at the spatial distribution of our cells on a UMAP plot
+# Note: cells will visually appear to be in clusters because 
+# they have similar RNA/UMI contents and therefore similar 
+# placement in UMAP space, but clusters are not recognized as # an entity by your computer yet
+plot_cells(cds_reddim)
+```
+![umap_plot1](https://github.com/fredhutchio/scRNAseq/blob/monocle/class2_figures/umap_nocluster.png)
+
+Now, we want to tell our computer to recognize cells that are in similar locations in UMAP space as clusters as they are likely the same/similar cell types.
+
+``` r
+# Cluster cells that are spatially related in UMAP space
+cds_clustered <- cluster_cells(cds_reddim)
+
+# Plot the cells newly recognized as clusters
+plot_cells(cds_clustered)
+```
+![umap_clustered](https://github.com/fredhutchio/scRNAseq/blob/monocle/class2_figures/umap_cluster_noresindication.png)
+
+Sometimes clusters that are very close together won’t be recognized as
+separate with the automatic parameters in each of these functions. If
+this happens you can run something like follows (note that our cluster
+identification is good, so we should see the same thing).
+
+``` r
+# Cluster cells and change the resolution parameter
+# Resolution ranges from 0 to 1
+# Best to keep resolution between 0 and 1e-2 if possible
+cds_clustered_res <- cluster_cells(cds_reddim, resolution=1e-5)
+
+# Plot clustered cells with defined resolution
+plot_cells(cds_clustered_res)
+```
+![umap_cluster_withres](https://github.com/fredhutchio/scRNAseq/blob/monocle/class2_figures/umap_cluster_res.png)
+
+## Wrapping Up
+
+Today we learned:
+
+  - how to evaluate which cells are good enough for analysis
+  - how to preprocess cells for analysis
+  - how to identify clusters in UMAP space

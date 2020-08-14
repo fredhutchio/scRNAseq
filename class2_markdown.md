@@ -127,4 +127,4 @@ example images once this is run on data)
 qplot(colData(cds)$n.umi, geom="density")
 ```
 
-![umi_plot1](https://github.com/fredhutchio/scRNAseq/blob/monocle/class2_figures/UMI_standard.png, width = 200)
+![umi_plot1](https://github.com/fredhutchio/scRNAseq/blob/monocle/class2_figures/UMI_standard.png | width = 200)

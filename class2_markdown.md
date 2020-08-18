@@ -46,8 +46,7 @@ library(dplyr)
 
 ## Load the Data
 
-Go to [this page]
-(https://figshare.com/articles/dataset/Single-cell_RNA-seq_data_from_microfluidic_emulsion_v2_/5968960)
+Go to [this page](https://figshare.com/articles/dataset/Single-cell_RNA-seq_data_from_microfluidic_emulsion_v2_/5968960)
 and download the attached files by clicking the “Download All” button.
 This should result in the download of a zip file called “5968960.zip”.
 
@@ -200,7 +199,7 @@ RNAs/UMIs measured over the number of ERCC transcripts/UMIs measured.
 
 This is not a requirement and its usefulness is somewhat debated in the
 context of single-cell transcriptomics (see [this
-paper] (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5549838/)), but is
+paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5549838/)), but is
 often a useful tool.
 
 FIXME (contemplating simply not using this as it is not in most current

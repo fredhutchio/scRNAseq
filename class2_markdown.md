@@ -200,7 +200,7 @@ RNAs/UMIs measured over the number of ERCC transcripts/UMIs measured.
 
 This is not a requirement and its usefulness is somewhat debated in the
 context of single-cell transcriptomics (see [this
-paper]<https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5549838/>), but is
+paper] <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5549838/>), but is
 often a useful tool.
 
 FIXME (contemplating simply not using this as it is not in most current

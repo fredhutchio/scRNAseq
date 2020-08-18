@@ -35,6 +35,10 @@ library(monocle3)
 # Load the ggplot2 functions that we will use to generate 
 # today's plots
 library(ggplot2)
+
+# Load the dplyr functions so that we will need downstream
+# for filtering
+library(dplyr)
 ```
 
 ## Reload CDS from Previous Lessons
@@ -43,7 +47,9 @@ We need to reload the cds from last time, which can be done as follows.
 
 ```{r, include=TRUE, message=FALSE}
 # Load matrix file into cds
-cds <- load_mm_data(mat_path = "~/Downloads/5968960/droplet/Lung-10X_P7_8/matrix.mtx", feature_anno_path = "~/Downloads/5968960/droplet/Lung-10X_P7_8/genes.tsv", cell_anno_path = "~/Downloads/5968960/droplet/Lung-10X_P7_8/barcodes.tsv")
+cds <- load_mm_data(mat_path = "~/Downloads/5968960/droplet/Lung-10X_P7_8/matrix.mtx",
+                    feature_anno_path = "~/Downloads/5968960/droplet/Lung-10X_P7_8/genes.tsv",
+                    cell_anno_path = "~/Downloads/5968960/droplet/Lung-10X_P7_8/barcodes.tsv")
 
 # Rename V2 row to gene_short_name 
 names(rowData(cds))[names(rowData(cds))=="V2"] <- "gene_short_name"
@@ -65,8 +71,69 @@ cds_clustered <- cluster_cells(cds_reddim)
 
 ## Differential Gene Expression
 
-### Identification of Top Differentially Expressed Genes
+There are several ways in which we can evaluate differentially expressed genes between clusters of interest. 
 
-### Generating Gene Modules
+* We can look at the top genes that are expressed in each cluster. 
+* We can look at the expression of genes of interest across all clusters. These may or may not be differentially expressed, but can help identify cell types if they are.
+
+We will explore both of these methods here.
+
+### Looking at the Top Differentially Expressed Genes in Each Cluster
+
+Let's determine which genes are differentially expressed in each cluster relative to other clusters.
+
+```{r, include=TRUE, message=FALSE}
+# Determine which genes are differentially expressed in clusters
+diff_genes <- top_markers(cds_clustered,
+                          group_cells_by="cluster",
+                          reference_cells = 1000,
+                          cores = 8)
+```
+
+The top_markers function generates various metrics that describe the expression of genes in each cluster. Let's take a look at what's included in diff_genes.
+
+```{r, message=FALSE}
+head(diff_genes)
+```
+
+There are multiple measures that we can assess. For example, we can look at the pseudo_R2 values which describes how well a given genes describe a cluster based on an underlying logistic regression model. 
+
+Let's look at the top 5 genes that define each cluster based on pseudo_R2.
+
+```{r, include=TRUE, message=FALSE}
+# Identify the top 5 different genes found in each cluster
+top5_specific_markers <- diff_genes %>%
+                            filter(fraction_expressing >= 0.10) %>%
+                            group_by(cell_group) %>%
+                            top_n(5, pseudo_R2)
+  
+# Identify the gene names that are associated with each of 
+# the top differentially expressed genes in each cluster
+top5_specific_marker_ids <- unique(top5_specific_markers %>%
+                                     pull(gene_id))
+
+# Look at the expression level of each of the top genes
+plot_genes_by_group(cds_clustered, 
+                    top5_specific_marker_ids, 
+                    group_cells_by="cluster", 
+                    ordering_type="cluster_row_col", 
+                    max.size=3)
+```
+
+### Looking at the Expression of Genes of Interest
+
+Let's look at the expression of some genes that are usually associated with lung tissues, since we know that our data includes lung cells.
+
+```{r, message=FALSE}
+# Look at lung-specific genes: Sftpc, sftpb, Scgb1a1, Ager, Slc34a2, Cldn18
+
+plot_cells(cds_clustered, genes=c("Sftpc", "Sftpb", "Scgb1a1","Ager", "Slc34a2", "Cldn18"))
+```
+
+You can look at any gene in this way. Note that if a gene is not found within a dataset, the expression map will not be depicted. If this happens, make sure to double check the gene short name is correct as sometimes the colloquial name is not the recognized name (i.e. CD43 would actually be called Spn). 
+
+Additionally, note that the representation of the gene name must match exactly to what is found in the CDS. For example, if you were to use all capital letters for the above genes, you would get an error stating that none of the genes are found in the dataset.
+
+## Generating Gene Modules
 
 ## Wrapping Up

@@ -7,7 +7,8 @@ So far we have:
 - clustered and visualized our cells in UMAP space
 
 Today we will learn how to:
-- use Garnett to 
+- use Garnett to classify cells with a pre-trained classifier and by training our own classifier
+- visualize cells with cell labels
 
 We can run clustering algorithms on our cells to identify "cell types" or cells that are similar to each other based on their shared gene expression. Without manually inspecting what genes are unique to cluster, it is difficult to assign cell types. Manually assigning cell clusters to known cell types based on canonical gene expression is a very laborious process. Luckily, the Trapnell lab has developed the software package Garnett. Garnett is a software package that facilitates automated cell type classification from single cell gene expression data. Garnett works by taking single-cell data, along with a cell type definition (marker) file, and training a regression-based classifier. Once a classifier is trained for a tissue/sample type, it can be applied to classify future datasets from similar tissues. In addition to describing training and classifying functions, this website aims to be a repository of previously trained classifiers.
 
@@ -149,5 +150,6 @@ plot_cells(cds, color_cells_by = "cell_type") + theme_bw()
 
 ## Wrapping Up
 
-Today we learned:
--
+Today we learned how to:
+- use Garnett to classify cells with a pre-trained classifier and by training our own classifier
+- visualize cells with cell labels

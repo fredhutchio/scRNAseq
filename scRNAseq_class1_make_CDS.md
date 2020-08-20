@@ -7,8 +7,8 @@ One week before session, hold an office hour to answer any remaining questions r
 
 __________________________________________________________________________
 
-Today we will be learning how to:
-1. create the data structures (CDS) that contain all of our single cell RNA-sequencing data 
+Today we will learn how to:
+1. create the data structures (CDS) that contain our single cell RNA-sequencing data starting with different data formats
 2. subset a CDS on a particular column value
 3. merge multiple CDSs
 
@@ -50,7 +50,7 @@ library(Matrix)
 Import the data into R markdown. 
 ```{r}
 cell_metadata = read.table("<filepath>/barcodes.tsv", sep = "\t", header = FALSE)
-gene_annotation = read.table("<filepath>/gene.tsv", sep = "\t", header = FALSE)
+gene_annotation = read.table("<filepath>/genes.tsv", sep = "\t", header = FALSE)
 expression_matrix = read.table("<filepath>/dense_matrix.txt", sep = " ", header = FALSE)
 ```
 Reformat the data around the following priniples:
@@ -82,7 +82,7 @@ Now we just made a CDS object the hard waty but there are a few other ways to ma
 If we are starting with a matrix that is already sparse, we only need to rerun steps 1, 2 and 4 (skip 3). We also will use the readMM function from the Matrix package to read a sparse matrix file into R.
 ```{r}
 cell_metadata = read.table("<filepath>/5968960/droplet/Lung-10X_P7_8/barcodes.tsv", sep = "\t", header = FALSE)
-gene_annotation = read.table("<filepath>/5968960/droplet/Lung-10X_P7_8/gene.tsv", sep = "\t", header = FALSE)
+gene_annotation = read.table("<filepath>/5968960/droplet/Lung-10X_P7_8/genes.tsv", sep = "\t", header = FALSE)
 sparse_matrix = readMM("<filepath>/5968960/droplet/Lung-10X_P7_8/matrix.mtx") # different from 1, .mtx file type is a sparseMatrix format
 
 # 1 - Gene names must have a column name "gene_short_name"
@@ -100,12 +100,12 @@ fData <- data.frame(gene_short_name = gene_annotation$gene_short_name, row.names
 cds_obj <- new_cell_data_set(sparse_matrix, cell_metadata = pd, gene_metadata = fData)
 ```
 ## 3. Starting with 10X Genomics CellRanger output
-A lot of researchers work with data from a CellRanger output from 10x so now we will introduce how to import data from a cell ranger output. There are two ways to do this, the first is to provide Monocle with the path to the 'outs' directory created by cell ranger. It is import that your directory structure match the directory and file names in order for this function to work.
+A lot of researchers work with data from a CellRanger output from 10x so now we will introduce how to import data from a cell ranger output. There are two ways to do this, the first is to provide Monocle with the path to the 'outs' directory created by cell ranger. It is import that your directory structure match the directory and file names in order for this function to work. Take a few minutes to create this data structure and copy and paste your three files in the final directory.
 
 With 10x v2 data:
-- 10x_data/outs/filtered_gene_bc_matrices/ <genome> /barcodes.tsv
-- 10x_data/outs/filtered_gene_bc_matrices/ <genome> /gene.tsv
-- 10x_data/outs/filtered_gene_bc_matrices/ <genome> /matrix.mtx
+- 10x_data/outs/filtered_gene_bc_matrices/"genome"/barcodes.tsv
+- 10x_data/outs/filtered_gene_bc_matrices/"genome"/genes.tsv
+- 10x_data/outs/filtered_gene_bc_matrices/"genome"/matrix.mtx
   
 With 10x v3 data:
 - 10x_data/outs/filtered_feature_bc_matrices/barcodes.tsv.gz
@@ -113,12 +113,12 @@ With 10x v3 data:
 - 10x_data/outs/filtered_feature_bc_matrices/matrix.mtx.gz
   
 ```{r}
-# our data is v2 data
+# our data is 10x v2 data
 cds_obj <- load_cellranger_data(pipestance_path ="<filepath>/5968960/droplet/Lung-10X_P7_8/10x_data")
 ```
 Alternatively, we can provide Monocle with the individual file paths for each of the three components.
 ```{r}
-cds_obj <- load_mm_data(mat_path = "<filepath>/5968960/droplet/Lung-10X_P7_8/matrix.mtx",feature_anno_path = "<filepath>/5968960/droplet/Lung-10X_P7_8/gene.tsv", cell_anno_path = "<filepath>/5968960/droplet/Lung-10X_P7_8/barcodes.tsv")
+cds_obj <- load_mm_data(mat_path = "<filepath>/10x_data/outs/filtered_gene_bc_matrices/"genome"/matrix.mtx",feature_anno_path = "<filepath>/10x_data/outs/filtered_gene_bc_matrices/"genome"/genes.tsv", cell_anno_path = "<filepath>/10x_data/outs/filtered_gene_bc_matrices/"genome"/barcodes.tsv")
 ```
 ## 4. Starting with CDS object
 Lastly, if someone has already saved a CDS object, you can import it directly into R. 
@@ -145,8 +145,14 @@ cds_obj
 ```
 ## Subsetting and Merging CDS objects
 In the next couple classes we are going to show you how to use Monocle to clean up, visualize and run statistical tests on your data. You may find you need to subset your CDS object to process different types of data individually or you may want to combine CDS objects.
+
 ```{r}
-# subset CDS into a new CDS object
+# example of subsetting a cds to remove cells without a lot of UMIs, size factors are used to adjust for UMI count
+cds_high_sf <- cds[colData(cds)$Size_factor < 3,]
+```
+
+```{r}
+# subset CDS by cells into a new CDS object
 cds2 <- cds[,1:100] # cds2 contains the first 100 cells
 
 # merge two CDS objects
@@ -158,6 +164,9 @@ If you want to learn more about a function in R you can put a question mark in f
 ```
 
 ## Wrapping Up
+-Today we learned how to:
+1. create the data structures (CDS) that contain our single cell RNA-sequencing data starting with different data formats
+2. subset a CDS on a particular column value
+3. merge multiple CDSs
 
-Today we learned:
--
+Next class we will talk more about how to analyze our data with Monocle.

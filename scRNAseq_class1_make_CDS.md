@@ -4,13 +4,14 @@
 Two weeks before session, distribute instructions on how to install Monocle version 3 (https://cole-trapnell-lab.github.io/monocle3/docs/installation/), common troubleshooting (https://cole-trapnell-lab.github.io/monocle3/docs/installation/#troubleshooting) and answers to common questions and issues (https://github.com/cole-trapnell-lab/monocle3/issues).
 
 One week before session, hold an office hour to answer any remaining questions regarding Monocle installation. Students are ready to proceed with the course once they can run library(monocle3) without any errors.
-
 __________________________________________________________________________
 
 Today we will learn how to:
 1. create the data structures (CDS) that contain our single cell RNA-sequencing data starting with different data formats
 2. subset a CDS on a particular column value
 3. merge multiple CDSs
+
+This class is based on materials provided by Monocle 3 and the Brotman Baty Institute (Aishwarya Gogate & Hannah Pliner).
 
 Cell data sets or CDSs are data structures that contain all of our single cell RNA-sequencing data. These CDS objects are multi-dimensional and are made up of 3 individual files:
   1. a matrix of counts of sequenced reads or unique molecular identifiers (UMIs) by genes (rows) and cell (columns)

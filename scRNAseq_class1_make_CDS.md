@@ -147,9 +147,10 @@ cds_obj
 ## Subsetting and Merging CDS objects
 In the next couple classes we are going to show you how to use Monocle to clean up, visualize and run statistical tests on your data. You may find you need to subset your CDS object to process different types of data individually or you may want to combine CDS objects.
 
+fix me: make these examples more interesting, relevant
 ```{r}
 # example of subsetting a cds to remove cells without a lot of UMIs, size factors are used to adjust for UMI count
-cds_high_sf <- cds[colData(cds)$Size_factor < 3,]
+cds_high_sf <- cds[colData(cds)$n.umi > 1000,]
 ```
 
 ```{r}

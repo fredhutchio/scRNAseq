@@ -7,7 +7,12 @@ One week before session, hold an office hour to answer any remaining questions r
 
 __________________________________________________________________________
 
-Today we will be reviewing how to create the data structures that contain all of our single cell RNA-sequencing data. These structured are called cell data sets or CDSs. These CDS objects are multi-dimensional and are made up of 3 individual files:
+Today we will be learning how to:
+1. create the data structures (CDS) that contain all of our single cell RNA-sequencing data 
+2. subset a CDS on a particular column value
+3. merge multiple CDSs
+
+Cell data sets or CDSs are data structures that contain all of our single cell RNA-sequencing data. These CDS objects are multi-dimensional and are made up of 3 individual files:
   1. a matrix of counts of sequenced reads or unique molecular identifiers (UMIs) by genes (rows) and cell (columns)
   2. a list of gene IDs that represents all genes quantified (correspond to matrix rows)
   3. a list of cell IDs that represents all cells measured (correspond to matrix columns) and any additional single cell data (i.e. replicates, experimental conditions) associated with those cell IDs
@@ -36,6 +41,7 @@ There are multiple methods to create a CDS object in Monocle that we will cover 
 First we will assume you are starting with the least processed form of single cell gene expression data, which is a matrix of counts- either reads or UMIs. To load the data into a CDS, you must convert the matrix into a sparse matrix. Instead of a matrix of values, a sparse matrix has three columns: row, column and value. The position of each non-zero value in the matrix is stored in this format. If you have a lot of data and a lot of that data is made of zeros, this is a much more efficient way to store the data AND it is the input format neccessary to make a CDS object for Monocle.
 
 ![matrix_types](http://www.btechsmartclass.com/data_structures/ds_images/Triplet_Representation_of_Sparse_Matrix.png)
+Image Source: www.btechsmartclass.com
 
 ```{r}
 # load packages
@@ -50,7 +56,7 @@ expression_matrix = read.table("<filepath>/dense_matrix.txt", sep = " ", header 
 Reformat the data around the following priniples:
 1. Gene names must have a column name "gene_short_name"
 ```{r}
-gene_annotation = rename(gene_annotation, c("V1"="gene_short_name"))
+gene_annotation = rename(gene_annotation, c("gene_short_name"="V1"))
 ```
 2.  expression matrix column names must match the row names of cell metadata
 ```{r}
@@ -80,7 +86,7 @@ gene_annotation = read.table("<filepath>/5968960/droplet/Lung-10X_P7_8/gene.tsv"
 sparse_matrix = readMM("<filepath>/5968960/droplet/Lung-10X_P7_8/matrix.mtx") # different from 1, .mtx file type is a sparseMatrix format
 
 # 1 - Gene names must have a column name "gene_short_name"
-gene_annotation = rename(gene_annotation, c("V1"="gene_short_name"))
+gene_annotation = rename(gene_annotation, c("gene_short_name"="V1"))
 
 # 2 - expression matrix column names must match the row names of cell metadata
 colnames(sparse_matrix) <- seq(1, dim(cell_metadata)[1], by=1) # different from 1

@@ -139,8 +139,8 @@ We can see the object is made up of the following multidimensions components:
 - colnames: cell ID names, in this case they are the actual unique cell barcodes
 - colData names: column names from cell metadata input, 
 - reducedDimNames: once you run dimension reductions (e.g. PCA, tSNE, UMAP), the values for those reduced dimensions will be stored here
-- spikeNames:  ?
-- altExpNames: ?
+- spikeNames:  ? (fixme)
+- altExpNames: ? (fixme)
 ```{r}
 cds_obj
 ```

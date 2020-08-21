@@ -2,8 +2,8 @@
 
 # Class 2: Preprocessing Cell Dataset Objects and Generating UMAP Plots
 
-This class is based on materials provided by Monocle 3 and the Brotman
-Baty Institute.
+This class is based on materials provided by [Monocle 3](https://cole-trapnell-lab.github.io/monocle3/) and the Brotman
+Baty Institute (via attended tutorials).
 
 ## Objectives
 

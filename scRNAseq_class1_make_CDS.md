@@ -59,7 +59,7 @@ expression_matrix = read.table("<filepath>/dense_matrix.txt", sep = " ", header 
 Reformat the data around the following priniples:
 1. Gene names must have a column name "gene_short_name"
 ```{r}
-gene_annotation = rename(gene_annotation, c("gene_short_name"="V1"))
+gene_annotation = rename(gene_annotation, c("V1"="gene_short_name"))
 ```
 2.  expression matrix column names must match the row names of cell metadata
 ```{r}

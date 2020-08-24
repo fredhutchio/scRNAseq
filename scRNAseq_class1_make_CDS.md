@@ -6,6 +6,8 @@ Two weeks before session, distribute instructions on how to install Monocle vers
 One week before session, hold an office hour to answer any remaining questions regarding Monocle installation. Students are ready to proceed with the course once they can run library(monocle3) without any errors.
 __________________________________________________________________________
 
+<FIXME: add introduction to scRNAseq and why this data is valuable>
+
 Today we will learn how to:
 1. create the data structures (CDS) that contain our single cell RNA-sequencing data starting with different data formats
 2. subset a CDS on a particular column value
@@ -87,7 +89,7 @@ gene_annotation = read.table("<filepath>/5968960/droplet/Lung-10X_P7_8/genes.tsv
 sparse_matrix = readMM("<filepath>/5968960/droplet/Lung-10X_P7_8/matrix.mtx") # different from 1, .mtx file type is a sparseMatrix format
 
 # 1 - Gene names must have a column name "gene_short_name"
-gene_annotation = rename(gene_annotation, c("gene_short_name"="V1"))
+gene_annotation = rename(gene_annotation, c("V1"="gene_short_name"))
 
 # 2 - expression matrix column names must match the row names of cell metadata
 colnames(sparse_matrix) <- seq(1, dim(cell_metadata)[1], by=1) # different from 1
@@ -139,7 +141,7 @@ We can see the object is made up of the following multidimensions components:
 - colnames: cell ID names, in this case they are the actual unique cell barcodes
 - colData names: column names from cell metadata input, 
 - reducedDimNames: once you run dimension reductions (e.g. PCA, tSNE, UMAP), the values for those reduced dimensions will be stored here
-- spikeNames:  ? (fixme)
+- spikeNames: ? (fixme)
 - altExpNames: ? (fixme)
 ```{r}
 cds_obj

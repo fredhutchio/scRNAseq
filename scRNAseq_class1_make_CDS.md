@@ -26,6 +26,12 @@ library(monocle3)
 ```
 Monocle is a toolkit in R to analyze single-cell gene expression experiments. 
 
+Citations: <br />
+Trapnell, C., Cacchiarelli, D., Grimsby, J. et al. The dynamics and regulators of cell fate decisions are revealed by pseudotemporal ordering of single cells. Nat Biotechnol 32, 381–386 (2014). https://doi.org/10.1038/nbt.2859 <br />
+Qiu, X., Hill, A., Packer, J. et al. Single-cell mRNA quantification and differential analysis with Census. Nat Methods 14, 309–315 (2017). https://doi.org/10.1038/nmeth.4150 <br />
+Qiu, X., Mao, Q., Tang, Y. et al. Reversed graph embedding resolves complex single-cell trajectories. Nat Methods 14, 979–982 (2017). https://doi.org/10.1038/nmeth.4402 <br />
+Cao, J., Spielmann, M., Qiu, X. et al. The single-cell transcriptional landscape of mammalian organogenesis. Nature 566, 496–502 (2019). https://doi.org/10.1038/s41586-019-0969-x <br />
+
 To get started, we want to download the single cell gene expression data we will be working with today. This data is from mouse and has been processed with 10x Genomics (v2) single cell platform.
 
 1. Download the data as a zip from Github (https://github.com/fredhutchio/scRNAseq/tree/monocle/lung_data/Lung-10X_P7_8)

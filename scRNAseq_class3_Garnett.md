@@ -122,16 +122,20 @@ Next, let's visualize cells colored by cell type
 ```{r}
 # visualize cells by major cell type
 plot_cells(cds, color_cells_by = "cell_type") + theme_bw()
-
+```
+![manual_cell_type](https://github.com/fredhutchio/scRNAseq/blob/monocle/class3_figures/manual_cell_type.png)
+```{r}
 # visualize cells by cell sub type
 plot_cells(cds, color_cells_by = "cell_type") + theme_bw()
 ```
+![manual_ext_type](https://github.com/fredhutchio/scRNAseq/blob/monocle/class3_figures/manual_ext_type.png)
+
 ## Classify cells with a pre-trained classifier
 Alternatively, we could have used the classifier already trained on cells, instead of training our own classifier. Luckily, in our case there exists a classifier run on cells of the same species, age and tissue but this is not always the case. Submit your marker file and classifiers if you make a new one to help increase the size of the marker file and classifier database (https://cole-trapnell-lab.github.io/garnett/docs/#submitting-a-classifier)!
 
 Let's download the "mmlung" classifier (https://cole-trapnell-lab.github.io/garnett/classifiers/). Save this classifier to your "scRNAseq_project" folder.
 ```{r}
-lung_classifier <- readRDS("<filepath>/mmLung_20191017.RDS")
+lung_classifier <- readRDS("<filepath>/mmLung_classifier.RDS")
 ```
 Let's classify the cells with the lung classifier we imported
 ```{r}
@@ -146,6 +150,17 @@ table(pData(cds)$cluster_ext_type)
 Next, let's visualize cells colored by cell type
 ```{r}
 plot_cells(cds, color_cells_by = "cell_type") + theme_bw()
+```
+![auto_cell_type](https://github.com/fredhutchio/scRNAseq/blob/monocle/class3_figures/auto_cell_type.png)
+```{r}
+plot_cells(cds, color_cells_by = "cell_type") + theme_bw()
+```
+![auto_ext_type](https://github.com/fredhutchio/scRNAseq/blob/monocle/class3_figures/auto_ext_type.png)
+
+## Save CDS
+We will be using this CDS with cell type labels for the next class
+```{r}
+saveRDS(cds, "<filepath>/cds_class3.RDS")
 ```
 
 ## Wrapping Up

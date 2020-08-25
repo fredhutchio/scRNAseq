@@ -80,8 +80,8 @@ fData <- data.frame(gene_short_name = gene_annotation$gene_short_name, row.names
 ```
 Now we can make the CDS object. Once we have a CDS object, we can 
 ```{r}
-cds_obj <- new_cell_data_set(data, cell_metadata = pd, gene_metadata = fData)
-cds_obj # look at the cds_object and confirm we have correct number of rows and columns
+cds <- new_cell_data_set(data, cell_metadata = pd, gene_metadata = fData)
+cds # look at the cds_object and confirm we have correct number of rows and columns
 ```
 Now we just made a CDS object the hard waty but there are a few other ways to make a CDS object. You might be starting with a sparse matrix already
 ## 2. Starting with sparse matrix of counts + cell IDs + gene IDs
@@ -106,7 +106,8 @@ pd <- data.frame(cell_metadata)
 fData <- data.frame(gene_short_name = gene_annotation$gene_short_name, row.names = row.names(sparse_matrix))
 
 # make CDS object
-cds_obj <- new_cell_data_set(sparse_matrix, cell_metadata = pd, gene_metadata = fData)
+cds <- new_cell_data_set(sparse_matrix, cell_metadata = pd, gene_metadata = fData)
+cds # look at the cds_object and confirm we have correct number of rows and columns
 ```
 ## 3. Starting with 10X Genomics CellRanger output
 A lot of researchers work with data from a CellRanger output from 10x so now we will introduce how to import data from a cell ranger output. There are two ways to do this, the first is to provide Monocle with the path to the 'outs' directory created by cell ranger. It is import that your directory structure match the directory and file names in order for this function to work. Take a few minutes to create this data structure and copy and paste your three files in the final directory.
@@ -123,20 +124,27 @@ With 10x v3 data:
   
 ```{r}
 # our data is 10x v2 data
-cds_obj <- load_cellranger_data(pipestance_path ="<filepath>/5968960/droplet/Lung-10X_P7_8/10x_data")
+cds <- load_cellranger_data(pipestance_path ="<filepath>/5968960/droplet/Lung-10X_P7_8/10x_data")
+cds # look at the cds_object and confirm we have correct number of rows and columns
 ```
 Alternatively, we can provide Monocle with the individual file paths for each of the three components.
 ```{r}
-cds_obj <- load_mm_data(mat_path = "<filepath>/10x_data/outs/filtered_gene_bc_matrices/"genome"/matrix.mtx",feature_anno_path = "<filepath>/10x_data/outs/filtered_gene_bc_matrices/"genome"/genes.tsv", cell_anno_path = "<filepath>/10x_data/outs/filtered_gene_bc_matrices/"genome"/barcodes.tsv")
+cds <- load_mm_data(mat_path = "<filepath>/10x_data/outs/filtered_gene_bc_matrices/"genome"/matrix.mtx",feature_anno_path = "<filepath>/10x_data/outs/filtered_gene_bc_matrices/"genome"/genes.tsv", cell_anno_path = "<filepath>/10x_data/outs/filtered_gene_bc_matrices/"genome"/barcodes.tsv")
+names(rowData(cds_obj))[names(rowData(cds_obj))=="V2"] <- "gene_short_name"
+cds # look at the cds_object and confirm we have correct number of rows and columns
 ```
 ## 4. Starting with CDS object
 Lastly, if someone has already saved a CDS object, you can import it directly into R. 
 ```{r}
-cds_obj <- readRDS(<filepath>/<filename>.RDS)
+cds <- readRDS("<filepath>/<filename>.RDS")
+names(rowData(cds_obj))[names(rowData(cds_obj))=="V2"] <- "gene_short_name"
+cds # look at the cds_object and confirm we have correct number of rows and columns
 ```
 ## The CDS object
 Now that we have a CDS object, let's get familiar with it!
-
+```{r}
+cds
+```
 We can see the object is made up of the following multidimensions components:
 - class: cell_data_set
 - dimensions: n rows (genes) and m columns (cells)
@@ -149,16 +157,20 @@ We can see the object is made up of the following multidimensions components:
 - reducedDimNames: once you run dimension reductions (e.g. PCA, tSNE, UMAP), the values for those reduced dimensions will be stored here
 - spikeNames: ? (fixme)
 - altExpNames: ? (fixme)
+
+## Save CDS for next class
+We will be using this CDS object in the following classes
 ```{r}
-cds_obj
+saveRDS(cds,"<filepath>/<filename>.RDS")
 ```
+
 ## Subsetting and Merging CDS objects
 In the next couple classes we are going to show you how to use Monocle to clean up, visualize and run statistical tests on your data. You may find you need to subset your CDS object to process different types of data individually or you may want to combine CDS objects.
 
 fix me: make these examples more interesting, relevant
 ```{r}
 # example of subsetting a cds to remove cells without a lot of UMIs, size factors are used to adjust for UMI count
-cds_high_sf <- cds[colData(cds)$n.umi > 1000,]
+cds_high_sf <- cds_obj[colData(cds_obj)$n.umi > 1000,]
 ```
 
 ```{r}

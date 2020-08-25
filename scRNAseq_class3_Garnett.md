@@ -10,7 +10,12 @@ Today we will learn how to:
 - use Garnett to classify cells with a pre-trained classifier and by training our own classifier
 - visualize cells with cell labels
 
-We can run clustering algorithms on our cells to identify "cell types" or cells that are similar to each other based on their shared gene expression. Without manually inspecting what genes are unique to cluster, it is difficult to assign cell types. Manually assigning cell clusters to known cell types based on canonical gene expression is a very laborious process. Luckily, the Trapnell lab has developed the software package Garnett. Garnett is a software package that facilitates automated cell type classification from single cell gene expression data. Garnett works by taking single-cell data, along with a cell type definition (marker) file, and training a regression-based classifier. Once a classifier is trained for a tissue/sample type, it can be applied to classify future datasets from similar tissues. In addition to describing training and classifying functions, this website aims to be a repository of previously trained classifiers.
+We can run clustering algorithms on our cells to identify "cell types" or cells that are similar to each other based on their shared gene expression. Without manually inspecting what genes are unique to cluster, it is difficult to assign cell types. Manually assigning cell clusters to known cell types based on canonical gene expression is a very laborious process. Luckily, the Trapnell lab has developed the software package Garnett. 
+
+Citation: <br />
+Pliner, H.A., Shendure, J. & Trapnell, C. Supervised classification enables rapid annotation of cell atlases. Nat Methods 16, 983–986 (2019). https://doi.org/10.1038/s41592-019-0535-3
+
+Garnett is a software package that facilitates automated cell type classification from single cell gene expression data. Garnett works by taking single-cell data, along with a cell type definition (marker) file, and training a regression-based classifier. Once a classifier is trained for a tissue/sample type, it can be applied to classify future datasets from similar tissues. In addition to describing training and classifying functions, this website aims to be a repository of previously trained classifiers.
 
 There are two options when you are starting:
 ![garnett](https://cole-trapnell-lab.github.io/garnett/images/flow_chart.png)
@@ -45,13 +50,13 @@ The marker file contains a list of cell type definitions written in an easy-to-r
 
 There are several ways to define cell types in the Garnett marker file format. In general, each cell's definition can have three major components. Only the first component is required. The first and most important specification for a cell type is its expression. Garnett offers several options for specifying marker genes, detailed below.
 
-Format:
-expressed: gene1, gene2
-not expressed: gene1, gene2
+Format: <br />
+expressed: gene1, gene2 <br />
+not expressed: gene1, gene2 <br />
 
-Example:
-expressed: MYOD1, MYH3
-not expressed: PAX6, PAX3
+Example: <br />
+expressed: MYOD1, MYH3 <br />
+not expressed: PAX6, PAX3 <br />
 
 In addition to expression information, you can further refine your cell type definitions using meta data. This is also where you will specify any subtypes you expect in your data.
 
@@ -61,20 +66,20 @@ custom meta data: specification allows you to provide any further meta data requ
 
 Lastly, we highly recommend that you document how you chose your marker definitions. To make it easier to keep track of, we provide an additional specification - references: - that will store your citation information for each cell type. 
 
-A more complex example:
->B cells
-expressed: CD19, MS4A1
-expressed above: CD79A 10
+A more complex example: <br />
+>B cells <br />
+expressed: CD19, MS4A1 <br />
+expressed above: CD79A 10 <br />
 references: https://www.abcam.com/primary-antibodies/b-cells-basic-immunophenotyping,
 10.3109/07420528.2013.775654
 
->T cells
-expressed: CD3D
-sample: blood # A meta data specification
+>T cells <br />
+expressed: CD3D <br />
+sample: blood # A meta data specification <br />
 
->Helper T cells
-expressed: CD4
-subtype of: T cells
+>Helper T cells <br />
+expressed: CD4 <br />
+subtype of: T cells <br />
 references: https://www.ncbi.nlm.nih.gov/pubmed/?term=12000723
 
 ## Classify our cells by training our own classifier with a marker file

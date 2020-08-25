@@ -55,6 +55,9 @@ Import the data into R markdown.
 cell_metadata = read.table("<filepath>/barcodes.tsv", sep = "\t", header = FALSE)
 gene_annotation = read.table("<filepath>/genes.tsv", sep = "\t", header = FALSE)
 expression_matrix = read.table("<filepath>/dense_matrix.txt", sep = " ", header = FALSE)
+
+# inspect the dense matrix format
+print(expression_matrix)
 ```
 Reformat the data around the following priniples:
 1. Gene names must have a column name "gene_short_name"
@@ -87,6 +90,9 @@ If we are starting with a matrix that is already sparse, we only need to rerun s
 cell_metadata = read.table("<filepath>/5968960/droplet/Lung-10X_P7_8/barcodes.tsv", sep = "\t", header = FALSE)
 gene_annotation = read.table("<filepath>/5968960/droplet/Lung-10X_P7_8/genes.tsv", sep = "\t", header = FALSE)
 sparse_matrix = readMM("<filepath>/5968960/droplet/Lung-10X_P7_8/matrix.mtx") # different from 1, .mtx file type is a sparseMatrix format
+
+# inspect the sparse matrix format
+print(sparse_matrix)
 
 # 1 - Gene names must have a column name "gene_short_name"
 gene_annotation = rename(gene_annotation, c("V1"="gene_short_name"))

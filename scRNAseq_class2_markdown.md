@@ -198,9 +198,8 @@ RNA/UMI contents. This is done by calculating the amount of intrinsic
 RNAs/UMIs measured over the number of ERCC transcripts/UMIs measured.
 
 This is not a requirement and its usefulness is somewhat debated in the
-context of single-cell transcriptomics (see [this
-paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5549838/)), but is
-often a useful tool.
+context of some single-cell transcriptomics platforms (see [this
+paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5549838/) about general ERCC use, see [this paper](https://www.nature.com/articles/ncomms14049) about ERCC use in 10X GEMs, and see [this site](https://kb.10xgenomics.com/hc/en-us/articles/217263926-Can-ERCC-spike-ins-be-used-for-normalization-) for 10X recommendations), but is often a useful tool and its use depends on the platform that you're using.
 
 FIXME (contemplating simply not using this as it is not in most current
 monocle packages; rather size factor is utilized instead in a lot of the

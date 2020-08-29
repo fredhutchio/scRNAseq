@@ -175,10 +175,10 @@ We can now color our plot by pseudotime so we can see how the trajectory reflect
 ```{r}
 # Plot clusters with coloring indicating pseudotime
 plot_cells(cds_order,
-           #color_cells_by = "pseudotime",
-           #label_cell_groups=FALSE,
-           #label_branch_points = FALSE,
-           #graph_label_size=1.5)
+           color_cells_by = "pseudotime",
+           label_cell_groups=FALSE,
+           label_branch_points = FALSE,
+           graph_label_size=1.5)
 ```
 
 ![pseudotime_coloring](https://github.com/fredhutchio/scRNAseq/blob/monocle/class4_figures/color_cells_by_pseudotime.png)

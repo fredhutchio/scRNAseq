@@ -176,6 +176,7 @@ plot_cells(cds_auto, color_cells_by = "cell_type") + theme_bw()
 
 Say we have two methods of annotating cells and we want to compare them-- specifically identify which cell types are commonly labaled as one cell type with one method and another cell type with another method. For example, it may be that both classifiers do a great job with classifying one cell type but another cell type is more ambigous so the classifier perform differently. We can create a "Confusion Matrix" to visualize these differences. 
 
+Code provided by Sanjay Srivatsan
 ```{r}
 # append cell annotations to the original cds
 cds$manual_cell_type = pData(cds_manual)$cell_type

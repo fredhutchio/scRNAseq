@@ -252,7 +252,12 @@ Now, let's finally look at the expression of each gene module in each cluster so
 
 ```{r}
 # Create heatmap showing the expression level of each gene module in each cluster
-pheatmap::pheatmap(aggregate_exp, cluster_rows=TRUE, cluster_cols=TRUE, scale="column", clustering_method="ward.D2", fontsize=6)
+pheatmap::pheatmap(aggregate_exp, 
+                  cluster_rows=TRUE, 
+                  cluster_cols=TRUE, 
+                  scale="column", 
+                  clustering_method="ward.D2", 
+                  fontsize=6)
 ```
 ![heatmap](https://github.com/fredhutchio/scRNAseq/blob/monocle/class4_figures/gene_module_heatmap.png)
 

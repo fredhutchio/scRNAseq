@@ -6,5 +6,5 @@
 ## Week 3: Garnett for Identification of Cells (Eliza)
 [Class_3.RMD] https://github.com/fredhutchio/scRNAseq/blob/monocle/scRNAseq_class3_Garnett.Rmd
 ## Week 4: Differential Expression Analysis and Gene Modules (Rachel)
-[Class 4 .RMD] https://github.com/fredhutchio/scRNAseq/blob/monocle/scRNAseq_class4_pseudotime_DEG.Rmd
+[Class 4 .RMD] https://github.com/fredhutchio/scRNAseq/blob/monocle/scRNAseq_class4_pseudotime_DEG.Rmd  
 [Rendered Version] https://github.com/fredhutchio/scRNAseq/blob/monocle/scRNAseq_class4_markdown.md

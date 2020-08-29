@@ -2,7 +2,8 @@
 
 # Class 4: Pseuodtime and Differential Expression Analysis
 
-This class is based off of code provided by Monocle 3 and the Brotman Baty Institute.
+This class is based on materials provided by [Monocle 3](https://cole-trapnell-lab.github.io/monocle3/) and the Brotman
+Baty Institute (via attended [tutorials](https://brotmanbaty.org/calendar/)).
 
 ## Objectives
 

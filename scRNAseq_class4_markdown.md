@@ -64,6 +64,8 @@ cds_clustered <- cluster_cells(cds_reddim)
 plot_cells(cds_clustered)
 ```
 
+![reloaded_cds](https://github.com/fredhutchio/scRNAseq/blob/monocle/class4_figures/reloaded_UMAP.png)
+
 ## Differential Gene Expression
 
 There are several ways in which we can evaluate differentially expressed genes between clusters of interest. 
@@ -90,6 +92,7 @@ The top_markers function generates various metrics that describe the expression 
 ```{r, message=FALSE}
 head(diff_genes)
 ```
+![head_diff_genes](https://github.com/fredhutchio/scRNAseq/blob/monocle/class4_figures/head_diff_genes.png)
 
 There are multiple measures that we can assess. For example, we can look at the pseudo_R2 values which describes how well a given genes describe a cluster based on an underlying logistic regression model. 
 
@@ -115,6 +118,8 @@ plot_genes_by_group(cds_clustered,
                     max.size=3)
 ```
 
+![top_marker_genes](https://github.com/fredhutchio/scRNAseq/blob/monocle/class4_figures/top5_specific_markers.png)
+
 ### Looking at the Expression of Genes of Interest
 
 Let's look at the expression of some genes that are usually associated with lung tissues, since we know that our data includes lung cells.
@@ -124,6 +129,8 @@ Let's look at the expression of some genes that are usually associated with lung
 
 plot_cells(cds_clustered, genes=c("Sftpc", "Sftpb", "Scgb1a1","Ager", "Slc34a2", "Cldn18"))
 ```
+
+![specific_genes](https://github.com/fredhutchio/scRNAseq/blob/monocle/class4_figures/genes_of_interest.png)
 
 You can look at any gene in this way. Note that if a gene is not found within a dataset, the expression map will not be depicted. If this happens, make sure to double check the gene short name is correct as sometimes the colloquial name is not the recognized name (i.e. CD43 would actually be called Spn). 
 
@@ -142,6 +149,7 @@ cds_learn_graph <- learn_graph(cds_clustered)
 # Plot the new version with a transposed graph
 plot_cells(cds_learn_graph)
 ```
+![learn_graph](https://github.com/fredhutchio/scRNAseq/blob/monocle/class4_figures/learn_graph_plot.png)
 
 Now, we have to tell the graph where the most likely starting point is. Pseudotime is best used when there is some sort of termporal component to your data. For example, you might be combining data collected from different embryo time points or maybe you're looking at a time course of samples with a drug added. With whichever temporal element you choose, it is typically a good idea to look at how cells are distributed in the clusters based on time points. 
 
@@ -153,26 +161,27 @@ For now, let's move on to the next step and use a random cluster (we'll go with 
 
 
 ```{r}
-# Use cluster 1, node "2" as a proxy "start" point for
-# pseudotime
-# [FIX ME; make this line active and add in photo of popup window since can't do interactive in R markdown] 
-#cds_order <- order_cells(cds_learn_graph)
+# Use cluster 1 as a proxy "start" point for pseudotime
+cds_order <- order_cells(cds_learn_graph)
 ```
+![cds_order](https://github.com/fredhutchio/scRNAseq/blob/monocle/class4_figures/order_cells_selected_node.png)
 
-When the above window pops up, put your mouse over the "2" dot that is overlayed on cluster 1, then click it. Next, click the "Choose/unchoose" button on the left of the screen. Now, click "Done". You have now chosen the "2" node over cluster 1 as the "start" for pseudotime.
+Note that in the above image, the "start" point has already been chosen and is highlighted in red. 
+
+When the above window pops up, put your mouse over the "2" dot that is overlayed on cluster 1, then click it. Next, click the "Choose/unchoose" button on the left of the screen. Now, click "Done". You have now chosen a node over cluster 1 as the "start" for pseudotime.
 
 We can now color our plot by pseudotime so we can see how the trajectory reflects time. 
 
 ```{r}
-# FIX ME
-# Make code active and paste in image of output
 # Plot clusters with coloring indicating pseudotime
-#plot_cells(cds_order,
+plot_cells(cds_order,
            #color_cells_by = "pseudotime",
            #label_cell_groups=FALSE,
            #label_branch_points = FALSE,
            #graph_label_size=1.5)
 ```
+
+![pseudotime_coloring](https://github.com/fredhutchio/scRNAseq/blob/monocle/class4_figures/color_cells_by_pseudotime.png)
 
 ## Generating Gene Modules
 
@@ -206,6 +215,8 @@ gene_modules <- find_gene_modules(cds_clustered[deg_ids,], resolution = 1e-2)
 head(gene_modules)
 ```
 
+![head_gene_modules](https://github.com/fredhutchio/scRNAseq/blob/monocle/class4_figures/head_gene_modules.png)
+
 Note that the new gene_modules dataframe includes a column called "module" containing a number. This is the number indicating which group of genes it most resembles in differential expression across the clusters. However, we likely want to know how these gene groups are expressed across clusters and what makes each group of genes different. For example, is module 1 expressed predominantly in endothelial cells whereas module 2 is predominantly downregulated in endothelial cells? 
 
 Let's take a look at the expression of these groups of genes, or gene modules, in each cluster.
@@ -218,6 +229,7 @@ cell_groups <- tibble::tibble(cell=row.names(colData(cds_clustered)), cell_group
 #Take a look at what this tibble looks like
 head(cell_groups)
 ```
+![head_cell_groups](https://github.com/fredhutchio/scRNAseq/blob/monocle/class4_figures/head_cell_group.png)
 
 We now have a list of barcodes/cells and which clusters they belong to. Now we can create a matrix containing the aggregated expression values associated with each gene module across the cells in each cluster.
 
@@ -234,6 +246,7 @@ colnames(aggregate_exp) <- stringr::str_c("Cluster", colnames(aggregate_exp))
 # Take a peek at aggregate_exp and what it contains
 head(aggregate_exp)
 ```
+![head_agg_exp](https://github.com/fredhutchio/scRNAseq/blob/monocle/class4_figures/head_agg_exp.png)
 
 Now, let's finally look at the expression of each gene module in each cluster so that we can determine gene modules/groups of interest based on the cell type(s) we are most interested in.
 
@@ -241,6 +254,7 @@ Now, let's finally look at the expression of each gene module in each cluster so
 # Create heatmap showing the expression level of each gene module in each cluster
 pheatmap::pheatmap(aggregate_exp, cluster_rows=TRUE, cluster_cols=TRUE, scale="column", clustering_method="ward.D2", fontsize=6)
 ```
+![heatmap](https://github.com/fredhutchio/scRNAseq/blob/monocle/class4_figures/gene_module_heatmap.png)
 
 Note that modules with more similar expression patterns across clusters are grouped closer together and clusters that have more similar expression patterns are closer together. 
 

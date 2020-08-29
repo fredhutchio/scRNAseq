@@ -211,7 +211,7 @@ Now we can find gene modules containing genes that have similar expression patte
 # Note the resolution is the same as used to define the clusters
 gene_modules <- find_gene_modules(cds_clustered[deg_ids,], resolution = 1e-2)
 
-# Look at what's included int the new gene_modules dataframe
+# Look at what's included in the new gene_modules dataframe
 head(gene_modules)
 ```
 

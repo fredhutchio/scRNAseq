@@ -37,6 +37,16 @@ library("org.Mm.eg.db")
 
 BiocManager::install(c('ggplot2'))
 library(ggplot2)
+
+# use function install.packages("package_name") if package not previously installed
+library(tidyverse)
+library(ggplot2)
+library(tidyr)
+library(viridis)
+library(ggridges)
+library(RColorBrewer)
+library(ggrepel)
+library(pheatmap)
 ```
 The Garnett workflow has two major parts, each described in detail below:
 
@@ -110,28 +120,28 @@ our_lung_classifier <- train_cell_classifier(cds = cds,
                                          num_unknown = 50,
                                          marker_file_gene_id_type = "SYMBOL")   
 # run the classifier on the cells in our cds                              
-cds <- classify_cells(cds, our_lung_classifier,
+cds_manual <- classify_cells(cds, our_lung_classifier,
                            db=org.Mm.eg.db,
                            cluster_extend = TRUE,
                            cds_gene_id_type = "SYMBOL")
 # look at cell classifications
-head(pData(cds))
+head(pData(cds_manual))
 
 # table of how many cells are classified into each major type
-table(pData(cds)$cell_type)
+table(pData(cds_manual)$cell_type)
 
 # table of how many cells are classified into each sub type
-table(pData(cds)$cluster_ext_type)                           
+table(pData(cds_manual)$cluster_ext_type)                           
 ```
 Next, let's visualize cells colored by cell type
 ```{r}
 # visualize cells by major cell type
-plot_cells(cds, color_cells_by = "cell_type") + theme_bw()
+plot_cells(cds_manual, color_cells_by = "cell_type") + theme_bw()
 ```
 ![manual_cell_type](https://github.com/fredhutchio/scRNAseq/blob/monocle/class3_figures/manual_cell_type.png)
 ```{r}
 # visualize cells by cell sub type
-plot_cells(cds, color_cells_by = "cell_type") + theme_bw()
+plot_cells(cds_manual, color_cells_by = "cell_type") + theme_bw()
 ```
 ![manual_ext_type](https://github.com/fredhutchio/scRNAseq/blob/monocle/class3_figures/manual_ext_type.png)
 
@@ -144,23 +154,67 @@ lung_classifier <- readRDS("<filepath>/mmLung_classifier.RDS")
 ```
 Let's classify the cells with the lung classifier we imported
 ```{r}
-cds <- classify_cells(cds, lung_classifier,
+cds_auto <- classify_cells(cds, lung_classifier,
                            db=org.Mm.eg.db,
                            cluster_extend = TRUE,
                            cds_gene_id_type = "SYMBOL")
-head(pData(cds))
-table(pData(cds)$cell_type)
-table(pData(cds)$cluster_ext_type)
+head(pData(cds_auto))
+table(pData(cds_auto)$cell_type)
+table(pData(cds_auto)$cluster_ext_type)
 ```
 Next, let's visualize cells colored by cell type
 ```{r}
-plot_cells(cds, color_cells_by = "cell_type") + theme_bw()
+plot_cells(cds_auto, color_cells_by = "cell_type") + theme_bw()
 ```
 ![auto_cell_type](https://github.com/fredhutchio/scRNAseq/blob/monocle/class3_figures/auto_cell_type.png)
 ```{r}
-plot_cells(cds, color_cells_by = "cell_type") + theme_bw()
+plot_cells(cds_auto, color_cells_by = "cell_type") + theme_bw()
 ```
 ![auto_ext_type](https://github.com/fredhutchio/scRNAseq/blob/monocle/class3_figures/auto_ext_type.png)
+
+## Visualize Different Annotations of the Same Cells with Different Annotation Methods
+
+Say we have two methods of annotating cells and we want to compare them-- specifically identify which cell types are commonly labaled as one cell type with one method and another cell type with another method. For example, it may be that both classifiers do a great job with classifying one cell type but another cell type is more ambigous so the classifier perform differently. We can create a "Confusion Matrix" to visualize these differences. 
+
+```{r}
+# append cell annotations to the original cds
+cds$manual_cell_type = pData(cds_manual)$cell_type
+cds$manual_cluster_ext_type = pData(cds_manual)$cluster_ext_type
+
+cds$auto_cell_type = pData(cds_auto)$cell_type
+cds$auto_cluster_ext_type = pData(cds_auto)$cluster_ext_type
+
+# Make a matrix to compare manual vs. already made classifier (auto)
+matrix_for_heatmap =
+  colData(cds) %>%
+  as.data.frame() %>%
+  group_by(manual_cluster_ext_type) %>%
+  add_tally(name = "num_manual_cell_type") %>%
+  ungroup() %>%
+  group_by(manual_cluster_ext_type, auto_cluster_ext_type) %>%
+  mutate(percent_nn_in_garnett = n()/num_manual_cell_type) %>%
+  dplyr::select(auto_cluster_ext_type, manual_cluster_ext_type, percent_nn_in_garnett) %>%
+  distinct() %>% 
+  spread(key =auto_cluster_ext_type, value =  percent_nn_in_garnett, fill = 0) 
+# create matrix for heatmap
+matrix_for_heatmap =
+  matrix_for_heatmap %>%
+  tibble::column_to_rownames(var = "manual_cluster_ext_type") %>%
+  as.matrix()
+
+# save heatmap as pdf
+pheatmap(matrix_for_heatmap,
+         cellwidth = 15,
+         cellheight = 15,
+         cluster_rows = F,
+         cluster_cols = F,
+         fontsize_row = 10,
+         fontsize_col = 10,
+         legend = T,
+         filename = "<filepath</<filename>.pdf",
+         color = viridis(option = "viridis", n = 40)) 
+```
+Check that the heatmap PDF saved in your specified file path. Examine the heatmap and take a few minutes and make a note of what you observe -- specifically what cell types are classified 
 
 ## Save CDS
 We will be using this CDS with cell type labels for the next class

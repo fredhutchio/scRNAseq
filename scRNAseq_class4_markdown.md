@@ -166,9 +166,7 @@ cds_order <- order_cells(cds_learn_graph)
 ```
 ![cds_order](https://github.com/fredhutchio/scRNAseq/blob/monocle/class4_figures/order_cells_selected_node.png)
 
-Note that in the above image, the "start" point has already been chosen and is highlighted in red. 
-
-When the above window pops up, put your mouse over the "2" dot that is overlayed on cluster 1, then click it. Next, click the "Choose/unchoose" button on the left of the screen. Now, click "Done". You have now chosen a node over cluster 1 as the "start" for pseudotime.
+When the above window pops up, put your mouse over the dot that is overlayed on cluster 1 (note that int he above image, the "start" point has already been chosen and is highlighted in red; select the same spot), then click it. Next, click the "Choose/unchoose" button on the left of the screen. Now, click "Done". You have now chosen a node over cluster 1 as the "start" for pseudotime.
 
 We can now color our plot by pseudotime so we can see how the trajectory reflects time. 
 

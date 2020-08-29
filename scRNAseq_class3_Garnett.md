@@ -214,7 +214,7 @@ pheatmap(matrix_for_heatmap,
          filename = "<filepath</<filename>.pdf",
          color = viridis(option = "viridis", n = 40)) 
 ```
-![heatmap](https://github.com/fredhutchio/scRNAseq/blob/monocle/class3_figures/heatmap_legend.pdf)
+![heatmap](https://github.com/fredhutchio/scRNAseq/blob/monocle/class3_figures/heatmap_legend.png)
 
 Check that the heatmap PDF saved in your specified file path and that it looks like the heatmap above. Examine the heatmap and take a few minutes and make a note of what you observe -- specifically what cell types are classified 
 

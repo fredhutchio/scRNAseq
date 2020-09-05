@@ -1,0 +1,1 @@
+This is the 10X dataset containing lung cells (generated via 10X 3' Chromium v2) that is used in the Monocle 3 classes. The dataset is part of a larger dataset found [here](https://figshare.com/articles/dataset/Single-cell_RNA-seq_data_from_microfluidic_emulsion_v2_/5968960). Note that the specific set of data shares the Lung-10X_P7_8 name within the dataset itself.

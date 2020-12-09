@@ -4,14 +4,17 @@ FIXME: intro
 
 ## Getting set up
 
-Here is the short version of instructions found in the [remote computing](remote_compute.md) instructions.
+The basic method for logging on to `rhino` and requesting computational resources to run `cellranger` are as follows:
 
-- Log on to snail (if necessary while off campus): `ssh username@snail.fhcrc.org`
 - Log on to rhino: `ssh username@rhino`
 - Grab a node: `grabnode`
 - Load software: `ml cellranger`
 
-This material is modified from an original tutorial from 10 Genomics available
+For in-depth descriptions of each step,
+please see [this tutorial](https://sciwiki.fredhutch.org/compdemos/first_rhino/)
+in the [FH Biomedical Data Science Wiki](https://sciwiki.fredhutch.org).
+
+This material below is modified from an original tutorial from 10x Genomics available
 [here](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/tutorial_ov).
 
 ### Project organization

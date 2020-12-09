@@ -4,19 +4,15 @@
 
 **NOTE: this material is currently under development**
 
-Description: This [[# classes/weeks]] course is designed to introduce attendees to [[main objectives]]
-Each [[length of session]] class meeting will include brief tutorials interspersed with challenge exercises, and assumes [[prerequisites]]. At the end of this course, you will be able to [[main deliverables]].
-
 [[links to other materials that have been adapted in this lesson]]
 
 Software requirements for this course can be found on [fredhutch.io's Software page](http://www.fredhutch.io/software/).
 
+## Tutorials
 
-## Schedule
-
-* [remote_compute.md](remote_compute.md) accessing remote computing at Fred Hutch
-* [cellranger.md](cellranger.md) fastq file processing and mapping
-
+- [cellranger.md](cellranger.md): fastq file processing and mapping using on-premise compute resources at Fred Hutch.
+Requires an understanding of command line operations using [Unix/bash shell](https://github.com/fredhutchio/unix_shell_intro).
+- [monocle](monocle/): analysis and visualization of processed scRNAseq data using `monocle` and `garnett`.
 
 ## Resources
 

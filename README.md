@@ -12,13 +12,12 @@ Software requirements for this course can be found on [fredhutch.io's Software p
 
 - [cellranger.md](cellranger.md): fastq file processing and mapping using on-premise compute resources at Fred Hutch.
 Requires an understanding of command line operations using [Unix/bash shell](https://github.com/fredhutchio/unix_shell_intro).
-- [monocle](monocle/): analysis and visualization of processed scRNAseq data using `monocle` and `garnett`.
+- [monocle](monocle/): analysis and visualization of processed scRNAseq data using `monocle` and `garnett`,
+which requires an understanding of [R code](https://github.com/fredhutchio/r_intro).
 
 ## Resources
 
-* Each week's materials are described in the relevant markdown (`*.md`) file.
-* [`exercises/`](exercises/) includes a file for each week representing both the aggregated in-class exercises as well as additional
-supplemental exercises for practice
-* [`solutions/`](solutions/) includes the solutions for all files in `exercises/`
+* Materials are described in the relevant markdown (`*.md`) files.
+* [`solutions/`](solutions/) includes the solutions for all challenge questions included in tutorials.
 * [`instructors.md`](instructors.md) includes information for instructors to facilitate teaching each lesson
 * [`hackmdio.txt`](hackmdio.txt) is an archive of the [interactive webpage](https://hackmd.io) used during lessons
